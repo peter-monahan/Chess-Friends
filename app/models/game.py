@@ -13,3 +13,13 @@ class Game(db.Model):  # type: ignore
   white_player = db.relationship('User', foreign_keys=[white_id], back_populates='games', lazy='raise')
   black_player = db.relationship('User', foreign_keys=[black_id], back_populates='games', lazy='raise')
   history = db.relationship('Game_History', back_populates='game', lazy='raise')
+
+  def to_dict(self):
+    return {
+      'id': self.id,
+      'white_id': self.white_id,
+      'black_id': self.black_id,
+      'json_data': self.json_data,
+      'created_at': self.created_at,
+      'updated_at': self.updated_at
+    }
