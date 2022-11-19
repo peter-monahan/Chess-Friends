@@ -3,6 +3,7 @@ from app.models import User, db
 from app.forms import LoginForm
 from app.forms import SignUpForm
 from flask_login import current_user, login_user, logout_user, login_required
+from app.sockets import socketio
 
 auth_routes = Blueprint('auth', __name__)
 
@@ -34,6 +35,7 @@ def login():
     """
     Logs a user in
     """
+    # print(f'==================login-SID = {request.sid}')
     form = LoginForm()
     # Get the csrf_token from the request cookie and put it into the
     # form manually to validate_on_submit can be used
@@ -51,6 +53,8 @@ def logout():
     """
     Logs a user out
     """
+    # print(f'==================logout-SID = {request.sid}')
+
     logout_user()
     return {'message': 'User logged out'}
 

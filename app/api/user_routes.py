@@ -6,14 +6,21 @@ user_routes = Blueprint('users', __name__)
 
 
 @user_routes.route('/')
-@login_required
 def users():
     users = User.query.all()
     return {'users': [user.to_dict() for user in users]}
 
 
 @user_routes.route('/<int:id>')
-@login_required
 def user(id):
     user = User.query.get(id)
     return user.to_dict()
+
+@user_routes.route('/<int:id>/friends')
+def get_user_friends(id):
+  user = User.query.get(id)
+
+  if user:
+    return {'friends': [user.to_dict() for user in user.friends]}
+  else:
+    return jsonify({'message': 'User could not be found'}), 404
