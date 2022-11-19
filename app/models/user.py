@@ -9,7 +9,7 @@ friendship = db.Table(
   db.Column("friend_id", db.Integer, db.ForeignKey('users.id'))
 )
 
-class User(db.Model, UserMixin):  # type: ignore
+class User(db.Model, UserMixin):
   __tablename__ = 'users'
 
   id = db.Column(db.Integer, primary_key=True)
