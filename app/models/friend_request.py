@@ -18,6 +18,6 @@ class Friend_Request(db.Model):  # type: ignore
       'id': self.id,
       'sender_id': self.sender_id,
       'receiver_id': self.receiver_id,
-      'created_at': self.created_at,
-      'updated_at': self.updated_at
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
     }

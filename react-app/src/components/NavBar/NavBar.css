@@ -1,0 +1,16 @@
+.nav-bar {
+  position: fixed;
+  height: 100%;
+  border-right: 1px solid black;
+  left: 0;
+  margin: 0;
+  top: 0;
+  width: 120px;
+  /* background-color: blanchedalmond; */
+}
+
+.nav-bar a {
+  text-decoration: none;
+  color: black;
+  border-bottom: 1px solid black;
+}

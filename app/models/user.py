@@ -62,6 +62,7 @@ class User(db.Model, UserMixin):
       'email': self.email,
       'profile_image_url': self.profile_image_url,
       'bio': self.bio,
-      'created_at': self.created_at,
-      'updated_at': self.updated_at
+      'active': bool(self.session_id),
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
     }

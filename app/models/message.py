@@ -20,6 +20,6 @@ class Message(db.Model):  # type: ignore
         'sender_id': self.sender_id,
         'receiver_id': self.receiver_id,
         'content': self.content,
-        'created_at': self.created_at,
-        'updated_at': self.updated_at
+        'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+        'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
       }
