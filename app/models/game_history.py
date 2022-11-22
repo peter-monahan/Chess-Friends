@@ -22,6 +22,6 @@ class Game_History(db.Model):  # type: ignore
       'white_id': self.white_id,
       'black_id': self.black_id,
       'json_data': self.json_data,
-      'created_at': self.created_at,
-      'updated_at': self.updated_at
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
     }

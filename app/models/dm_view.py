@@ -10,6 +10,9 @@ class Dm_View(db.Model):  # type: ignore
   created_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
   updated_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
 
+  __table_args__ = (db.UniqueConstraint('user_id', 'other_user_id', name='_user_other_uc'),)
+
+  user = db.relationship('User', foreign_keys=[other_user_id], lazy='joined')
 
   # messages = db.relationship("Message", primaryjoin="or_(Dm_View.user_id==Message.sender_id and Dm_View.other_user_id==Message.receiver_id, " "Dm_View.other_user_id==Message.sender_id and Dm_View.user_id==Message.receiver_id)", lazy='raise')
   # will have to be done as a query when needed ^^^
@@ -18,6 +21,7 @@ class Dm_View(db.Model):  # type: ignore
       'id': self.id,
       'user_id': self.user_id,
       'other_user_id': self.other_user_id,
-      'created_at': self.created_at,
-      'updated_at': self.updated_at
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'user': self.user.to_dict()
     }
