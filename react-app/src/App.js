@@ -30,12 +30,12 @@ function App() {
     if(user) {
       socket = io()
 
-      // socket.on("connect", () => {
-      //   console.log('Connected')
-      // });
-      // socket.on("disconnect", () => {
-      //   console.log('Disconnected')
-      // });
+      socket.on("connect", () => {
+        console.log('Connected')
+      });
+      socket.on("disconnect", () => {
+        console.log('Disconnected')
+      });
       socket.on('new_chat', (chat) => {
         dispatch(addChat(chat))
       });
@@ -48,9 +48,9 @@ function App() {
       socket.on('edit_message', (message) => {
         dispatch(addMessage(message, message.sender_id))
       });
-      // socket.onAny((message, ...args) => {
-      //   console.log(message, args)
-      // })
+      socket.onAny((message, ...args) => {
+        console.log(message, args)
+      })
     } else if(socket) {
       socket.disconnect()
     }
@@ -77,27 +77,17 @@ function App() {
         <Route path='/users' exact={true} >
           <UsersList/>
         </Route>
+
         <Route path='/users/:userId' exact={true} >
           <User />
         </Route>
-        <ProtectedRoute path='/friends' exact={true} >
-          <h1>Friends</h1>
-        </ProtectedRoute>
-        <ProtectedRoute path='/friends/requests' exact={true} >
-          <h1>Friend Requests</h1>
-        </ProtectedRoute>
-        <ProtectedRoute path='/games' exact={true} >
-          <h1>Games</h1>
-        </ProtectedRoute>
         <ProtectedRoute path='/games/:gameId' exact={true} >
           <h1>Game</h1>
         </ProtectedRoute>
-        <ProtectedRoute path='/messages' exact={true} >
-          <Chats />
-        </ProtectedRoute>
         <Route path='/' exact={true} >
-          <h1>My Home Page</h1>
+          <Chats />
         </Route>
+
       </Switch>
     </BrowserRouter>
   );

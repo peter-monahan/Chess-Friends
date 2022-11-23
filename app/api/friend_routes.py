@@ -20,6 +20,11 @@ def validation_errors_to_error_messages(validation_errors):
             errorMessages.append(f'{field} : {error}')
     return errorMessages
 
+@friend_routes.route('')
+@login_required
+def get_friends():
+  user = User.query.get(current_user.id)
+  return {friend.id: friend.to_dict() for friend in user.friends}
 
 
 @friend_routes.route('/<int:id>', methods=["DELETE"])
@@ -65,8 +70,8 @@ def create_friend_request():
 def get_friend_requests():
   user = User.query.get(current_user.id)
   res = {
-    'sent_friend_requests': [friend_request.to_dict() for friend_request in user.sent_friend_requests],
-    'received_friend_requests': [friend_request.to_dict() for friend_request in user.received_friend_requests]
+    'sent': {friend_request.id: friend_request.to_dict() for friend_request in user.sent_friend_requests},
+    'received': {friend_request.id: friend_request.to_dict() for friend_request in user.received_friend_requests}
   }
   return res
 
@@ -104,15 +109,15 @@ def delete_friend_request(id):
       db.session.delete(request)
       db.session.commit()
       if other_user.session_id:
-        socketio.emit('delete_friend_request', request.to_dict())
-      return {'message': 'Success', 'item': request.to_dict()}
+        socketio.emit('delete_friend_request', {'request': request.to_dict(), 'requestType': 'sent'})
+      return {'message': 'Success', 'item': request.to_dict(), 'requestType': 'received'}
     elif request.sender_id == current_user.id:
       other_user = User.query.get(request.receiver_id)
       db.session.delete(request)
       db.session.commit()
       if other_user.session_id:
-        socketio.emit('delete_friend_request', request.to_dict())
-      return {'message': 'Success', 'item': request.to_dict()}
+        socketio.emit('delete_friend_request', {'request': request.to_dict(), 'requestType': 'received'})
+      return {'message': 'Success', 'item': request.to_dict(), 'requestType': 'sent'}
     else:
       return {'errors': ['Unauthorized']}, 401
   else:

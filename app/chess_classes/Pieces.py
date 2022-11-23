@@ -1,13 +1,22 @@
 class Piece:
   def __init__(self, board, data):
     self.board = board
-    self.color = data['id'][:5]
+    self.color = data['color']
     # self.start_coords = start_coords
     self.curr_coords = data['curr_coords']
     self.times_moved = data['times_moved']
     self.valid_moves = data['valid_moves']
     self.id = data['id']
 
+
+  def to_dict(self):
+    return {
+      'id': self.id,
+      'color': self.color,
+      'curr_coords': self.curr_coords,
+      'times_moved': self.times_moved,
+      'valid_moves': self.valid_moves
+    }
 
   def move(self, new_coords):
     [curr_row, curr_col] = self.curr_coords
@@ -115,14 +124,26 @@ class Pawn(ShortRangePiece):
   def __init__(self, board, data):
     super().__init__(board, data)
 
-    self.en_passantable = False
-    self.double_move = None
-    self.en_passant_move = {}
+    self.en_passantable = data['en_passantable']
+    self.double_move = data['double_move']
+    self.en_passant_move = data['double_move']
     if self.color == 'black':
       self.pairs = [[1, -1], [1, 1]]
     elif self.color == 'white':
       self.pairs = [[-1, -1], [-1, 1]]
 
+
+  def to_dict(self):
+    return {
+      'id': self.id,
+      'color': self.color,
+      'curr_coords': self.curr_coords,
+      'times_moved': self.times_moved,
+      'valid_moves': self.valid_moves,
+      'en_passantable': self.en_passantable,
+      'double_move': self.double_move,
+      'en_passant_move': self.en_passant_move
+    }
 
 
   def move(self, new_coordinates):
@@ -243,24 +264,37 @@ class King(ShortRangePiece):
   def __init__(self, board, data):
     super().__init__(board, data)
 
-    self.castleMove = {}
-    self.board[f'{id[:5]}_king'] = self
+    self.castle_move = data['castle_move']
+    if self.color == 'white':
+      self.board.white_king = self
+    else:
+      self.board.black_king = self
     self.pairs = [[1,-1], [1, 1], [-1, -1], [-1, 1], [-1, 0], [1, 0], [0, -1], [0, 1]]
 
+
+  def to_dict(self):
+    return {
+      'id': self.id,
+      'color': self.color,
+      'curr_coords': self.curr_coords,
+      'times_moved': self.times_moved,
+      'valid_moves': self.valid_moves,
+      'castle_move': self.castle_move
+    }
 
   def move(self, new_coordinates):
     [curr_row, curr_col] = self.curr_coords
     [new_row, new_col] = new_coordinates
     old_piece = self.board.grid[new_row][new_col]
 
-    if self.castleMove[','.join(new_coordinates)]:
-      rook = self.castleMove[','.join(new_coordinates)]['piece']
-      [rookRow, rookCol] = self.castleMove[','.join(new_coordinates)]['spot']
+    if self.castle_move[','.join(new_coordinates)]:
+      rook = self.castle_move[','.join(new_coordinates)]['piece']
+      [rookRow, rookCol] = self.castle_move[','.join(new_coordinates)]['spot']
       [oldRookRow, oldRookCol] = rook.curr_coords
 
       self.board.grid[oldRookRow][oldRookCol] = None
       self.board.grid[rookRow][rookCol] = rook
-      rook.curr_coords = self.castleMove[','.join(new_coordinates)].spot
+      rook.curr_coords = self.castle_move[','.join(new_coordinates)].spot
       rook.times_moved += 1
 
 
@@ -277,7 +311,7 @@ class King(ShortRangePiece):
 
 
   def get_valid_moves(self):
-    self.castleMove = {}
+    self.castle_move = {}
     res = []
     visible_squares = self.get_line_of_sight()
 
@@ -293,7 +327,7 @@ class King(ShortRangePiece):
 
       for direction in leftRight:
         [row, col] = self.curr_coords
-        castleMove = f'{row},{(direction * 2) + col}'
+        castle_move = f'{row},{(direction * 2) + col}'
         dependantMove = f'{row},{direction + col}'
         foundPiece = None
 
@@ -306,9 +340,9 @@ class King(ShortRangePiece):
 
 
         if foundPiece and foundPiece.id[6:10] == 'rook' and foundPiece.times_moved == 0:
-          if dependantMove in res and not (castleMove in self.board.opponent_line_of_sight):
-            self.castleMove[castleMove] = {'piece': foundPiece, 'spot': [int(num) for num in dependantMove.split(',')]}
-            res.append(castleMove)
+          if dependantMove in res and not (castle_move in self.board.opponent_line_of_sight):
+            self.castle_move[castle_move] = {'piece': foundPiece, 'spot': [int(num) for num in dependantMove.split(',')]}
+            res.append(castle_move)
 
 
     self.valid_moves = res
@@ -342,3 +376,12 @@ class King(ShortRangePiece):
           res[','.join(self.board[f'{self.color}_pieces'][pieces[0]].curr_coords)] = pinnedMoves
 
     return res
+
+pieces_obj = {
+  'pawn': Pawn,
+  'rook': Rook,
+  'knig': Knight,
+  'bish': Bishop,
+  'quee': Queen,
+  'king': King
+}

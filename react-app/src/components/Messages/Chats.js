@@ -3,14 +3,19 @@ import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllChats, createChat, deleteAChat } from '../../store/chats';
 import { createMessage, deleteAMessage, getAllMessages, editMessage } from '../../store/messages';
-
+import {getAllFriendRequests} from '../../store/friendRequests';
+import {getAllFriends} from '../../store/friends';
+import {getAllGameRequests} from '../../store/gameRequests';
 function Chats() {
   const dispatch = useDispatch()
   const [thing, setThing] = useState('')
   const messages = useSelector(state => state.messages)
   const user = useSelector(state => state.session.user)
   useEffect(() => {
+    dispatch(getAllFriends())
     dispatch(getAllChats())
+    dispatch(getAllFriendRequests())
+    dispatch(getAllGameRequests())
     if (user.id === 1){
       dispatch(getAllMessages(3))
     } else if (user.id === 3) {

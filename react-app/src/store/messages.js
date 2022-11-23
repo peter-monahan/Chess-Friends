@@ -4,9 +4,9 @@
 import { myFetch } from "./myFetch";
 
 //constants
-const GET_MESSAGES = 'GET_MESSAGES';
-const ADD_MESSAGE = 'ADD_MESSAGE';
-const DELETE_MESSAGE = 'DELETE_MESSAGE';
+const GET_MESSAGES = 'messages/GET_MESSAGES';
+const ADD_MESSAGE = 'messages/ADD_MESSAGE';
+const DELETE_MESSAGE = 'messages/DELETE_MESSAGE';
 
 
 //ACTION CREATORS

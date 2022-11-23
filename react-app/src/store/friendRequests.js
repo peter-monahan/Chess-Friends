@@ -4,9 +4,9 @@
 import { myFetch } from "./myFetch";
 
 //constants
-const GET_ALL_FRIEND_REQUESTS = 'GET_ALL_FRIEND_REQUESTS';
-const CREATE_FRIEND_REQUEST = 'CREATE_FRIEND_REQUEST';
-const DELETE_FRIEND_REQUEST = 'DELETE_FRIEND_REQUEST';
+const GET_ALL_FRIEND_REQUESTS = 'friendRequests/GET_ALL_FRIEND_REQUESTS';
+const CREATE_FRIEND_REQUEST = 'friendRequests/CREATE_FRIEND_REQUEST';
+const DELETE_FRIEND_REQUEST = 'friendRequests/DELETE_FRIEND_REQUEST';
 
 
 //ACTION CREATORS
@@ -18,18 +18,20 @@ const getFriendRequests = (friendRequests) => {
 };
 
 
-export const addFriendRequest = (friendRequest) => {
+export const addFriendRequest = (friendRequest, requestType) => {
   return {
     type: CREATE_FRIEND_REQUEST,
     friendRequest,
+    requestType,
   }
 };
 
 
-const deleteFriendRequest = (friendRequestId) => {
+const deleteFriendRequest = (friendRequestId, requestType) => {
   return {
     type: DELETE_FRIEND_REQUEST,
-    friendRequestId
+    friendRequestId,
+    requestType,
   }
 };
 
@@ -57,7 +59,7 @@ export const createFriendRequest = (receiver_id) => async (dispatch) => {
 
   if (res.ok) {
     const newFriendRequest = await res.json();
-    dispatch(addFriendRequest(newFriendRequest));
+    dispatch(addFriendRequest(newFriendRequest, 'sent'));
     return res
   }
 };
@@ -70,25 +72,25 @@ export const deleteAFriendRequest = (friendRequestId) => async (dispatch) => {
   });
   const response = await res.json();
   if (res.ok) {
-    dispatch(deleteFriendRequest(friendRequestId));
+    dispatch(deleteFriendRequest(friendRequestId, response.requestType));
   }
   return response;
 };
 
 
-const initialState = {};
+const initialState = {sent: {}, received: {}};
 
 //Comments REDUCER
 export default function reducer(state = initialState, action) {
-  let newState = { ...state }
+  let newState = {sent:{...state.sent}, received: {...state.received}}
   switch (action.type) {
     case GET_ALL_FRIEND_REQUESTS:
       return action.friendRequests
     case CREATE_FRIEND_REQUEST:
-      newState[action.friendRequest.id] = action.friendRequest
+      newState[action.requestType][action.friendRequest.id] = action.friendRequest
       return newState;
     case DELETE_FRIEND_REQUEST:
-      delete newState[action.friendRequestId]
+      delete newState[action.requestType][action.friendRequestId]
       return newState;
     default:
       return state;

@@ -3,11 +3,18 @@ import thunk from 'redux-thunk';
 import session from './session'
 import chats from './chats';
 import messages from './messages';
+import friends from './friends';
+import friendRequests from './friendRequests';
+import gameRequests from './gameRequests';
+
 
 const rootReducer = combineReducers({
   session,
   chats,
-  messages
+  messages,
+  friends,
+  friendRequests,
+  gameRequests
 });
 
 

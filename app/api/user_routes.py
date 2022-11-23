@@ -14,7 +14,7 @@ def users():
 @user_routes.route('/<int:id>')
 def user(id):
     user = User.query.get(id)
-    return user.to_dict()
+    return user.to_dict() #TODO: add new to_dict method with joined friends and other data
 
 @user_routes.route('/<int:id>/friends')
 def get_user_friends(id):
