@@ -14,60 +14,85 @@ class Game:
     # self.pieces_obj = pieces_obj
 
     self.board = data['board']
-    self.black_pieces = {id: pieces_obj[id[6:10]](self, data['black_pieces'][id]) for id in data['black_pieces']}
-    self.black_king = self.black_pieces['black,king']
-    self.white_pieces = {id: pieces_obj[id[6:10]](self, data['white_pieces'][id]) for id in data['white_pieces']}
-    self.white_king = self.white_pieces['white,king']
+    self.pieces = {
+      'white': {id: pieces_obj[id[6:10]](self, data['pieces']['white'][id]) for id in data['pieces']['white']},
+      'black': {id: pieces_obj[id[6:10]](self, data['pieces']['black'][id]) for id in data['pieces']['black']}
+    }
+    self.kings = {
+      'white': self.pieces['white']['white,king'],
+      'black': self.pieces['black']['black,king']
+    }
     self.opponent_line_of_sight = []
     self.checks = [],
     self.pinned_pieces = {}
-
+    self.valid_moves = []
     self.turn = data['turn']
     self.next_id = data['next_id']
+    self.checkmate = False
+    self.stalemate = False
 
+
+
+    # self.black_king = self.black_pieces['black,king']
+    # self.white_king = self.white_pieces['white,king']
+    # self.white_pieces = {id: pieces_obj[id[6:10]](self, data['white_pieces'][id]) for id in data['white_pieces']}
+    # self.black_pieces = {id: pieces_obj[id[6:10]](self, data['black_pieces'][id]) for id in data['black_pieces']}
 
 
 
   def update(self):
+    print('==========UPDATING BOARD')
     [self.turn[0], self.turn[1]] = [self.turn[1], self.turn[0]]
     self.checks = []
     self.opponent_line_of_sight = []
+    self.valid_moves = []
 
+    king = self.kings[self.turn[0]]
+    enemy_pieces = self.pieces[self.turn[1]]
+    friendly_pieces = self.pieces[self.turn[0]]
     self.pinned_pieces = king.check_for_pins()
-
-    king = self[f'{self.turn[0]}_king']
     [king_row, king_col] = king.curr_coords
-
-    king_str = self.board[king_row][king_col]
     self.board[king_row][king_col] = None
 
-    for piece in self[f'{self.turn[1]}_pieces']:
-      piece_sight = piece.get_line_of_sight()
+    for piece_key in enemy_pieces:
+      piece_sight = enemy_pieces[piece_key].get_line_of_sight()
+      enemy_pieces[piece_key].valid_moves = []
 
-      for coord in piece_sight:
-        square = ','.join(coord)
+      for square in piece_sight:
         self.opponent_line_of_sight.append(square)
 
+    self.board[king_row][king_col] = king.id
+    for piece_key in friendly_pieces:
+      friendly_pieces[piece_key].get_valid_moves()
 
-    self.board[king_row][king_col] = king_str
-    for piece in self[f'{self.turn[0]}_pieces']:
-      piece.get_valid_moves()
+    if not self.valid_moves:
+      if self.checks:
+        self.checkmate = True
+      else:
+        self.stalemate = True
 
   def to_dict(self):
     return {
     'board': self.board,
-    'black_pieces': {self.black_pieces[key].id: self.black_pieces[key].to_dict() for key in self.black_pieces},
-    'white_pieces': {self.white_pieces[key].id: self.white_pieces[key].to_dict() for key in self.white_pieces},
+    'pieces': {
+      'black': {self.pieces['black'][key].id: self.pieces['black'][key].to_dict() for key in self.pieces['black']},
+      'white': {self.pieces['white'][key].id: self.pieces['white'][key].to_dict() for key in self.pieces['white']},
+    },
     'turn': self.turn,
-    'next_id': self.next_id
+    'next_id': self.next_id,
+    'stalemate': self.stalemate,
+    'checkmate': self.checkmate,
+    'checks': self.checks
     }
 
   def move(self, old_coords, new_coords):
     id = self.board[old_coords[0]][old_coords[1]]
     if id[:5] != self.turn[0]:
       return False
-    piece = self[f'{self.turn[0]}_pieces'][id]
-    if ','.join(new_coords) in piece.valid_moves:
+
+    piece = self.pieces[self.turn[0]][id]
+
+    if new_coords in piece.valid_moves:
       piece.move(new_coords)
       return True
     else:

@@ -12,16 +12,19 @@ function Chats() {
   const messages = useSelector(state => state.messages)
   const user = useSelector(state => state.session.user)
   useEffect(() => {
-    dispatch(getAllFriends())
-    dispatch(getAllChats())
-    dispatch(getAllFriendRequests())
-    dispatch(getAllGameRequests())
-    if (user.id === 1){
-      dispatch(getAllMessages(3))
-    } else if (user.id === 3) {
-      dispatch(getAllMessages(1))
+    if(user) {
+
+      dispatch(getAllFriends())
+      dispatch(getAllChats())
+      dispatch(getAllFriendRequests())
+      dispatch(getAllGameRequests())
+      if (user.id === 1){
+        dispatch(getAllMessages(3))
+      } else if (user.id === 3) {
+        dispatch(getAllMessages(1))
+      }
     }
-  }, [])
+  }, [user])
 
   const doThing = () => {
     if (user.id === 1) {
