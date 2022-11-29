@@ -9,8 +9,8 @@ class Game_Request(db.Model):  # type: ignore
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, default=datetime.now)
 
-  sender = db.relationship('User', foreign_keys=[user_id], backref='sent_game_requests', lazy='raise')
-  receiver = db.relationship('User', foreign_keys=[opponent_id], backref='received_game_requests', lazy='raise')
+  sender = db.relationship('User', foreign_keys=[user_id], backref='sent_game_requests', lazy='joined')
+  receiver = db.relationship('User', foreign_keys=[opponent_id], backref='received_game_requests', lazy='joined')
 
 
   def to_dict(self):
@@ -20,4 +20,24 @@ class Game_Request(db.Model):  # type: ignore
       'opponent_id': self.opponent_id,
       'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
       'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
+    }
+
+  def sent_to_dict(self):
+    return {
+      'id': self.id,
+      'user_id': self.user_id,
+      'opponent_id': self.opponent_id,
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'receiver': self.receiver.to_dict()
+    }
+
+  def received_to_dict(self):
+    return {
+      'id': self.id,
+      'user_id': self.user_id,
+      'opponent_id': self.opponent_id,
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'sender': self.sender.to_dict()
     }

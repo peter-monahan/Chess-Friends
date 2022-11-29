@@ -70,8 +70,8 @@ def create_friend_request():
 def get_friend_requests():
   user = User.query.get(current_user.id)
   res = {
-    'sent': {friend_request.id: friend_request.to_dict() for friend_request in user.sent_friend_requests},
-    'received': {friend_request.id: friend_request.to_dict() for friend_request in user.received_friend_requests}
+    'sent': {friend_request.id: friend_request.sent_to_dict() for friend_request in user.sent_friend_requests},
+    'received': {friend_request.id: friend_request.received_to_dict() for friend_request in user.received_friend_requests}
   }
   return res
 
@@ -88,7 +88,7 @@ def accept_friend_request(id):
       db.session.delete(request)
       db.session.commit()
       if request.sender.session_id:
-        socketio.emit('new_friend', request.receiver.to_dict(),
+        socketio.emit('new_friend', {'friend': request.receiver.to_dict(), 'requestId': request.id},
                       room=request.sender.session_id)
       return request.sender.to_dict()
     else:

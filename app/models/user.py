@@ -59,6 +59,27 @@ class User(db.Model, UserMixin):
     return {
       'id': self.id,
       'username': self.username,
+      'profile_image_url': self.profile_image_url,
+      'bio': self.bio,
+      'active': bool(self.session_id),
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+    }
+
+  def to_dict_little(self):
+    # May add is_friend bool at a later date
+    return {
+      'id': self.id,
+      'username': self.username,
+      'profile_image_url': self.profile_image_url,
+      'active': bool(self.session_id),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+    }
+
+  def to_dict_private(self):
+    return {
+      'id': self.id,
+      'username': self.username,
       'email': self.email,
       'profile_image_url': self.profile_image_url,
       'bio': self.bio,

@@ -5,16 +5,20 @@ import chats from './chats';
 import messages from './messages';
 import friends from './friends';
 import friendRequests from './friendRequests';
+import games from './games';
 import gameRequests from './gameRequests';
+import users from './users';
 
 
 const rootReducer = combineReducers({
   session,
-  chats,
+  games,
+  gameRequests,
   messages,
+  chats,
   friends,
   friendRequests,
-  gameRequests
+  users,
 });
 
 

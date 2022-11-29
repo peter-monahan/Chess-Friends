@@ -27,7 +27,7 @@ export const addGameRequest = (gameRequest, requestType) => {
 };
 
 
-const deleteGameRequest = (gameRequestId, requestType) => {
+export const deleteGameRequest = (gameRequestId, requestType) => {
   return {
     type: DELETE_GAME_REQUEST,
     gameRequestId,

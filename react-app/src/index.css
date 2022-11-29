@@ -3,10 +3,14 @@
 html {
   padding: 0px;
   margin: 0px;
+
 }
 
 body {
   padding: 0px;
   margin: 0px;
-  padding-left: 120px;
+  padding-left: 130px;
+  background-color: #312e2b;
+  color: white;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }

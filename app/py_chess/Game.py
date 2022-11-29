@@ -19,8 +19,8 @@ class Game:
       'black': {id: pieces_obj[id[6:10]](self, data['pieces']['black'][id]) for id in data['pieces']['black']}
     }
     self.kings = {
-      'white': self.pieces['white']['white,king'],
-      'black': self.pieces['black']['black,king']
+      'white': self.pieces['white']['white,king,00'],
+      'black': self.pieces['black']['black,king,00']
     }
     self.opponent_line_of_sight = []
     self.checks = [],

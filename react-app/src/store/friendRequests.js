@@ -27,7 +27,7 @@ export const addFriendRequest = (friendRequest, requestType) => {
 };
 
 
-const deleteFriendRequest = (friendRequestId, requestType) => {
+export const deleteFriendRequest = (friendRequestId, requestType) => {
   return {
     type: DELETE_FRIEND_REQUEST,
     friendRequestId,

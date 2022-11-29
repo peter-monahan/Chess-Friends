@@ -10,7 +10,6 @@ def seed_friends():
   james = User.query.filter(User.username == 'james').first()
   magnus = User.query.filter(User.username == 'magnus').first()
 
-  hensell.befriend(baylen)
   hensell.befriend(Demo)
   hensell.befriend(zaviar)
   hensell.befriend(james)

@@ -1,5 +1,5 @@
 //all actions specific to COMMENTS Resource
-
+import { deleteFriendRequest } from "./friendRequests";
 //imports
 import { myFetch } from "./myFetch";
 
@@ -55,6 +55,7 @@ export const acceptFriendRequest = (requestId) => async (dispatch) => {
   if (res.ok) {
     const newFriend = await res.json();
     dispatch(addFriend(newFriend));
+    dispatch(deleteFriendRequest(requestId, 'received'))
     return res
   }
 };

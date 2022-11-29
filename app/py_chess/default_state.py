@@ -1,18 +1,18 @@
 default = {
     "board": [
         [
-            "black,rook,1",
-            "black,knight,2",
-            "black,bishop,3",
-            "black,queen,4",
-            "black,king",
-            "black,bishop,5",
-            "black,knight,6",
-            "black,rook,7"
+            "black,rook,01",
+            "black,knight,02",
+            "black,bishop,03",
+            "black,queen,04",
+            "black,king,00",
+            "black,bishop,05",
+            "black,knight,06",
+            "black,rook,07"
         ],
         [
-            "black,pawn,8",
-            "black,pawn,9",
+            "black,pawn,08",
+            "black,pawn,09",
             "black,pawn,10",
             "black,pawn,11",
             "black,pawn,12",
@@ -61,8 +61,8 @@ default = {
             None
         ],
         [
-            "white,pawn,8",
-            "white,pawn,9",
+            "white,pawn,08",
+            "white,pawn,09",
             "white,pawn,10",
             "white,pawn,11",
             "white,pawn,12",
@@ -71,14 +71,14 @@ default = {
             "white,pawn,15"
         ],
         [
-            "white,rook,1",
-            "white,knight,2",
-            "white,bishop,3",
-            "white,queen,4",
-            "white,king",
-            "white,bishop,5",
-            "white,knight,6",
-            "white,rook,7"
+            "white,rook,01",
+            "white,knight,02",
+            "white,bishop,03",
+            "white,queen,04",
+            "white,king,00",
+            "white,bishop,05",
+            "white,knight,06",
+            "white,rook,07"
         ]
     ],
     "checkmate": False,
@@ -86,54 +86,54 @@ default = {
     "next_id": 15,
     "pieces": {
         "black": {
-            "black,bishop,3": {
+            "black,bishop,03": {
                 "color": "black",
                 "curr_coords": [
                     0,
                     2
                 ],
-                "id": "black,bishop,3",
+                "id": "black,bishop,03",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "black,bishop,5": {
+            "black,bishop,05": {
                 "color": "black",
                 "curr_coords": [
                     0,
                     5
                 ],
-                "id": "black,bishop,5",
+                "id": "black,bishop,05",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "black,king": {
+            "black,king,00": {
                 "castle_move": {},
                 "color": "black",
                 "curr_coords": [
                     0,
                     4
                 ],
-                "id": "black,king",
+                "id": "black,king,00",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "black,knight,2": {
+            "black,knight,02": {
                 "color": "black",
                 "curr_coords": [
                     0,
                     1
                 ],
-                "id": "black,knight,2",
+                "id": "black,knight,02",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "black,knight,6": {
+            "black,knight,06": {
                 "color": "black",
                 "curr_coords": [
                     0,
                     6
                 ],
-                "id": "black,knight,6",
+                "id": "black,knight,06",
                 "times_moved": 0,
                 "valid_moves": []
             },
@@ -233,7 +233,7 @@ default = {
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "black,pawn,8": {
+            "black,pawn,08": {
                 "color": "black",
                 "curr_coords": [
                     1,
@@ -245,11 +245,11 @@ default = {
                 ],
                 "en_passant_move": {},
                 "en_passantable": False,
-                "id": "black,pawn,8",
+                "id": "black,pawn,08",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "black,pawn,9": {
+            "black,pawn,09": {
                 "color": "black",
                 "curr_coords": [
                     1,
@@ -261,80 +261,80 @@ default = {
                 ],
                 "en_passant_move": {},
                 "en_passantable": False,
-                "id": "black,pawn,9",
+                "id": "black,pawn,09",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "black,queen,4": {
+            "black,queen,04": {
                 "color": "black",
                 "curr_coords": [
                     0,
                     3
                 ],
-                "id": "black,queen,4",
+                "id": "black,queen,04",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "black,rook,1": {
+            "black,rook,01": {
                 "color": "black",
                 "curr_coords": [
                     0,
                     0
                 ],
-                "id": "black,rook,1",
+                "id": "black,rook,01",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "black,rook,7": {
+            "black,rook,07": {
                 "color": "black",
                 "curr_coords": [
                     0,
                     7
                 ],
-                "id": "black,rook,7",
+                "id": "black,rook,07",
                 "times_moved": 0,
                 "valid_moves": []
             }
         },
         "white": {
-            "white,bishop,3": {
+            "white,bishop,03": {
                 "color": "white",
                 "curr_coords": [
                     7,
                     2
                 ],
-                "id": "white,bishop,3",
+                "id": "white,bishop,03",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "white,bishop,5": {
+            "white,bishop,05": {
                 "color": "white",
                 "curr_coords": [
                     7,
                     5
                 ],
-                "id": "white,bishop,5",
+                "id": "white,bishop,05",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "white,king": {
+            "white,king,00": {
                 "castle_move": {},
                 "color": "white",
                 "curr_coords": [
                     7,
                     4
                 ],
-                "id": "white,king",
+                "id": "white,king,00",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "white,knight,2": {
+            "white,knight,02": {
                 "color": "white",
                 "curr_coords": [
                     7,
                     1
                 ],
-                "id": "white,knight,2",
+                "id": "white,knight,02",
                 "times_moved": 0,
                 "valid_moves": [
                     [
@@ -347,13 +347,13 @@ default = {
                     ]
                 ]
             },
-            "white,knight,6": {
+            "white,knight,06": {
                 "color": "white",
                 "curr_coords": [
                     7,
                     6
                 ],
-                "id": "white,knight,6",
+                "id": "white,knight,06",
                 "times_moved": 0,
                 "valid_moves": [
                     [
@@ -516,7 +516,7 @@ default = {
                     ]
                 ]
             },
-            "white,pawn,8": {
+            "white,pawn,08": {
                 "color": "white",
                 "curr_coords": [
                     6,
@@ -528,7 +528,7 @@ default = {
                 ],
                 "en_passant_move": {},
                 "en_passantable": False,
-                "id": "white,pawn,8",
+                "id": "white,pawn,08",
                 "times_moved": 0,
                 "valid_moves": [
                     [
@@ -541,7 +541,7 @@ default = {
                     ]
                 ]
             },
-            "white,pawn,9": {
+            "white,pawn,09": {
                 "color": "white",
                 "curr_coords": [
                     6,
@@ -553,7 +553,7 @@ default = {
                 ],
                 "en_passant_move": {},
                 "en_passantable": False,
-                "id": "white,pawn,9",
+                "id": "white,pawn,09",
                 "times_moved": 0,
                 "valid_moves": [
                     [
@@ -566,33 +566,33 @@ default = {
                     ]
                 ]
             },
-            "white,queen,4": {
+            "white,queen,04": {
                 "color": "white",
                 "curr_coords": [
                     7,
                     3
                 ],
-                "id": "white,queen,4",
+                "id": "white,queen,04",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "white,rook,1": {
+            "white,rook,01": {
                 "color": "white",
                 "curr_coords": [
                     7,
                     0
                 ],
-                "id": "white,rook,1",
+                "id": "white,rook,01",
                 "times_moved": 0,
                 "valid_moves": []
             },
-            "white,rook,7": {
+            "white,rook,07": {
                 "color": "white",
                 "curr_coords": [
                     7,
                     7
                 ],
-                "id": "white,rook,7",
+                "id": "white,rook,07",
                 "times_moved": 0,
                 "valid_moves": []
             }

@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from app.models import User, Game, Game_Request, db
 from datetime import datetime
 from app.sockets import socketio
-from app import chess_classes
+from app import py_chess
 import json
 
 game_routes = Blueprint('games', __name__)
@@ -21,11 +21,26 @@ def validation_errors_to_error_messages(validation_errors):
     return errorMessages
 
 
-@game_routes.route('/')
+@game_routes.route('')
 @login_required
 def get_games():
     user = User.query.get(current_user.id)
-    return {game.id: game.to_dict() for game in user.games}
+    return {game.id: game.to_dict_with_opponent(current_user.id) for game in user.games}
+
+
+@game_routes.route('/<int:id>')
+@login_required
+def get_game(id):
+  game_record = Game.query.get(id)
+  if game_record:
+    if current_user.id == game_record.white_id or current_user.id == game_record.black_id:
+      return game_record.to_dict_with_opponent(current_user.id)
+    else:
+      return {'errors': ['Unauthorized']}, 401
+  else:
+    return {'errors': ['Game could not be found']}, 404
+
+
 
 
 @game_routes.route('/<int:id>', methods=["PUT"])
@@ -34,39 +49,45 @@ def make_move(id):
     move = request.json
     game_record = Game.query.get(id)
     if game_record:
-        game_data = json.load(game_record.json_data)
+        game_data = json.loads(game_record.json_data)
         if game_data['turn'] == 'white' and current_user.id == game_record.white_id:
-            game = chess_classes.Game(game=game_data)
-            success = game.move(move)
-            if game.checkmate:
-              pass
-            elif game.stalemate:
-              pass
+            game = py_chess.Game(game=game_data)
+            success = game.move(*move)
             if success:
-                game_record.json_data = json.dumps(game.to_dict())
-                db.session.commit()
-                if game_record.black_player.session_id:
-                    socketio.emit('update_game', game.to_dict(),
-                                  room=game_record.black_player.session_id)
-                return game.to_dict()
+                if game.checkmate:
+                    print('=====CHECKMATE')
+                elif game.stalemate:
+                    print('=====STALEMATE')
+                else:
+                    game_record.json_data = json.dumps(game.to_dict())
+                    db.session.commit()
+                    if game_record.black_player.session_id:
+                        socketio.emit('update_game', game_record.to_dict(),
+                                      room=game_record.black_player.session_id)
+                    return game_record.to_dict()
+            else:
+                return {'errors': ['Not a valid move']}, 400
         elif game_data['turn'] == 'black' and current_user.id == game_record.black_id:
-            game = chess_classes.Game(game=game_data)
-            success = game.move(move)
-            if game.checkmate:
-              pass
-            elif game.stalemate:
-              pass
+            game = py_chess.Game(game=game_data)
+            success = game.move(*move)
             if success:
-                game_record.json_data = json.dumps(game.to_dict())
-                db.session.commit()
-                if game_record.white_player.session_id:
-                    socketio.emit('update_game', game.to_dict(),
-                                  room=game_record.white_player.session_id)
-                return game.to_dict()
+                if game.checkmate:
+                    print('=====CHECKMATE')
+                elif game.stalemate:
+                    print('=====STALEMATE')
+                else:
+                    game_record.json_data = json.dumps(game.to_dict())
+                    db.session.commit()
+                    if game_record.white_player.session_id:
+                        socketio.emit('update_game', game_record.to_dict(),
+                                      room=game_record.white_player.session_id)
+                    return game_record.to_dict()
+            else:
+                return {'errors': ['Not a valid move']}, 400
         else:
             return {'errors': ['Unauthorized']}, 401
     else:
-        return {'message': 'Game could not be found'}, 404
+        return {'errors': ['Game could not be found']}, 404
 
 
 @game_routes.route('/<int:id>', methods=["DELETE"])
@@ -87,8 +108,8 @@ def get_game_requests():
     user = User.query.get(current_user.id)
 
     res = {
-        'sent': [game_request.to_dict() for game_request in user.sent_game_requests],
-        'received': [game_request.to_dict() for game_request in user.received_game_requests]
+        'sent': {game_request.id: game_request.sent_to_dict() for game_request in user.sent_game_requests},
+        'received': {game_request.id: game_request.received_to_dict() for game_request in user.received_game_requests}
     }
     return res
 
@@ -149,16 +170,16 @@ def accept_game_request(id):
 
     if request:
         if request.opponent_id == current_user.id:
-            game_data = chess_classes.Game()
+            game_data = py_chess.Game()
             game = Game(white_id=request.user_id, black_id=request.opponent_id,
                         json_data=json.dumps(game_data.to_dict()))
             db.session.delete(request)
             db.session.add(game)
             db.session.commit()
             if request.sender.session_id:
-                socketio.emit('new_game', game.to_dict(),
+                socketio.emit('new_game', {'game': game.to_dict_with_opponent(request.sender.id), 'requestId':request.id},
                               room=request.sender.session_id)
-            return game.to_dict()
+            return game.to_dict_with_opponent(current_user.id)
         else:
             return {'errors': ['Unauthorized']}, 401
     else:
