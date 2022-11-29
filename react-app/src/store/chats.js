@@ -4,9 +4,9 @@
 import { myFetch } from "./myFetch";
 
 //constants
-const GET_ALL_CHATS = 'GET_ALL_CHATS';
-const CREATE_CHAT = 'CREATE_CHAT';
-const DELETE_CHAT = 'DELETE_CHAT';
+const GET_ALL_CHATS = 'chats/GET_ALL_CHATS';
+const CREATE_CHAT = 'chats/CREATE_CHAT';
+const DELETE_CHAT = 'chats/DELETE_CHAT';
 
 
 //ACTION CREATORS

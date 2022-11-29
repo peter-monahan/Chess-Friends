@@ -3,6 +3,10 @@ import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllChats, createChat, deleteAChat } from '../../store/chats';
 import { createMessage, deleteAMessage, getAllMessages, editMessage } from '../../store/messages';
+import {getAllFriendRequests} from '../../store/friendRequests';
+import {getAllFriends} from '../../store/friends';
+import {getAllGameRequests} from '../../store/gameRequests';
+import {getAllGames} from '../../store/games';
 
 function Chats() {
   const dispatch = useDispatch()
@@ -10,13 +14,20 @@ function Chats() {
   const messages = useSelector(state => state.messages)
   const user = useSelector(state => state.session.user)
   useEffect(() => {
-    dispatch(getAllChats())
-    if (user.id === 1){
-      dispatch(getAllMessages(3))
-    } else if (user.id === 3) {
-      dispatch(getAllMessages(1))
+    if(user) {
+      dispatch(getAllGames())
+      dispatch(getAllFriends())
+      dispatch(getAllChats())
+      dispatch(getAllFriendRequests())
+      dispatch(getAllGameRequests())
+      if (user.id === 1){
+        dispatch(getAllMessages(3))
+        dispatch(getAllMessages(2))
+      } else if (user.id === 3) {
+        dispatch(getAllMessages(1))
+      }
     }
-  }, [])
+  }, [user])
 
   const doThing = () => {
     if (user.id === 1) {
@@ -54,15 +65,14 @@ function Chats() {
 
       <input value={thing} onChange={e => setThing(e.target.value)}></input>
 
-
       {Object.keys(messages).map(key => {
         return (
-          <div>
+          <div key={key}>
             {key}
             {Object.keys(messages[key]).map(messKey => {
               let message = messages[key][messKey]
               return (
-                <div style={{border: '1px solid black'}}>
+                <div key={messKey} style={{border: '1px solid black'}}>
                   <div>id:{message.id}</div>
                   <div>sender:{message.sender_id}</div>
                   <div>receiver:{message.receiver_id}</div>

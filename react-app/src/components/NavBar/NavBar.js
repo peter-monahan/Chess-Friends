@@ -1,51 +1,40 @@
-
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import {FaHome, FaComments} from 'react-icons/fa';
 import LogoutButton from '../auth/LogoutButton';
+import GamesButton from './Games/GamesButton'
+import FriendsButton from './Friends/FriendsButton';
+import MessagesButton from './Messages/MessagesButton';
 import './NavBar.css'
 const NavBar = () => {
+  const sessionUser = useSelector(state => state.session.user);
+  if(!sessionUser) {
+    return (
+    <nav className='nav-bar'>
+      <NavLink to='/' exact={true} className='nav-item' activeClassName='active'>
+        <FaHome size={25} className='nav-icon' />Home
+      </NavLink>
+      <NavLink to='/login' exact={true} className='nav-item' activeClassName='active'>
+        Login
+      </NavLink>
+      <NavLink to='/sign-up' exact={true} className='nav-item' activeClassName='active'>
+        SignUp
+      </NavLink>
+    </nav>
+    )
+  }
   return (
     <nav className='nav-bar'>
-      <ul>
-        <li>
-          <NavLink to='/' exact={true} activeClassName='active'>
-            Home
+          <NavLink to='/' exact={true} className='nav-item' activeClassName='active'>
+            <FaHome size={25} className='nav-icon' />Home
           </NavLink>
-        </li>
-        <li>
-          <NavLink to='/login' exact={true} activeClassName='active'>
-            Login
+          <GamesButton />
+          <MessagesButton />
+          <FriendsButton />
+          <NavLink to='/users' exact={true} className='nav-item' activeClassName='active'>
+            Users
           </NavLink>
-        </li>
-        <li>
-          <NavLink to='/sign-up' exact={true} activeClassName='active'>
-            Sign Up
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to='/friends/requests' exact={true} activeClassName='active'>
-            Friend Requests
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to='/games' exact={true} activeClassName='active'>
-            Games
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to='/friends' exact={true} activeClassName='active'>
-            Friends
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to='/messages' exact={true} activeClassName='active'>
-            Messages
-          </NavLink>
-        </li>
-        <li>
           <LogoutButton />
-        </li>
-      </ul>
     </nav>
   );
 }

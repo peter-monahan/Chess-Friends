@@ -1,0 +1,57 @@
+.message-bar {
+  position: fixed;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(58, 56, 53);
+  color: rgb(241, 241, 241);
+  width: 180px;
+  left: 130px;
+  margin: 0;
+  top: 0;
+}
+
+.message-sent-received {
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+}
+
+.message-tab {
+text-align: center;
+margin-right: 8px;
+margin-left: 8px;
+border-left: 1px solid black;
+border-right: 1px solid black;
+border-top: 1px solid black;
+padding: 4px;
+border-top-left-radius: 15%;
+border-top-right-radius: 15%;
+width: 70px;
+cursor: pointer;
+}
+
+
+
+
+
+.messages-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  border-top: 1px solid black;
+}
+
+.chat-button {
+  height: 20px;
+  border: 1px solid black;
+  width: 150px;
+  cursor: pointer;
+}
+
+.chat-button.active {
+  background-color: rgb(71, 69, 65);
+
+}

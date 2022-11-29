@@ -7,11 +7,15 @@ import NavBar from './components/NavBar/NavBar';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import UsersList from './components/UsersList';
 import User from './components/User';
-import Chats from './components/Messages/Chats'
+import Game from './components/Game/Game';
 import { authenticate } from './store/session';
 import { io } from 'socket.io-client';
 import {addChat} from './store/chats';
 import {addMessage, deleteMessage} from './store/messages';
+import {addFriend} from './store/friends';
+import {deleteFriendRequest} from './store/friendRequests';
+import {addGame} from './store/games';
+import {deleteGameRequest} from './store/gameRequests';
 
 let socket;
 
@@ -30,12 +34,12 @@ function App() {
     if(user) {
       socket = io()
 
-      // socket.on("connect", () => {
-      //   console.log('Connected')
-      // });
-      // socket.on("disconnect", () => {
-      //   console.log('Disconnected')
-      // });
+      socket.on("connect", () => {
+        console.log('Connected')
+      });
+      socket.on("disconnect", () => {
+        console.log('Disconnected')
+      });
       socket.on('new_chat', (chat) => {
         dispatch(addChat(chat))
       });
@@ -48,9 +52,17 @@ function App() {
       socket.on('edit_message', (message) => {
         dispatch(addMessage(message, message.sender_id))
       });
-      // socket.onAny((message, ...args) => {
-      //   console.log(message, args)
-      // })
+      socket.on('new_friend', ({friend, requestId}) => {
+        dispatch(addFriend(friend));
+        dispatch(deleteFriendRequest(requestId, 'sent'))
+      });
+      socket.on('new_game', ({game, requestId}) => {
+        dispatch(addGame(game));
+        dispatch(deleteGameRequest(requestId, 'sent'))
+      });
+      socket.onAny((message, ...args) => {
+        console.log(message, args)
+      })
     } else if(socket) {
       socket.disconnect()
     }
@@ -77,27 +89,17 @@ function App() {
         <Route path='/users' exact={true} >
           <UsersList/>
         </Route>
+
         <Route path='/users/:userId' exact={true} >
           <User />
         </Route>
-        <ProtectedRoute path='/friends' exact={true} >
-          <h1>Friends</h1>
-        </ProtectedRoute>
-        <ProtectedRoute path='/friends/requests' exact={true} >
-          <h1>Friend Requests</h1>
-        </ProtectedRoute>
-        <ProtectedRoute path='/games' exact={true} >
-          <h1>Games</h1>
-        </ProtectedRoute>
         <ProtectedRoute path='/games/:gameId' exact={true} >
-          <h1>Game</h1>
-        </ProtectedRoute>
-        <ProtectedRoute path='/messages' exact={true} >
-          <Chats />
+          <Game />
         </ProtectedRoute>
         <Route path='/' exact={true} >
-          <h1>My Home Page</h1>
+          <h1>Home Page</h1>
         </Route>
+
       </Switch>
     </BrowserRouter>
   );
