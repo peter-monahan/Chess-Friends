@@ -11,15 +11,23 @@
   margin: 0;
   top: 0;
 }
+.messages-container {
+  overflow-y: auto;
+  height: 85%;
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse
 
+}
 .messages {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  justify-content: flex-end;
-  height: 85%;
+  /* justify-content: flex-end; */
+  overflow-y: auto;
   row-gap: 5px;
+  /* height: 100%; */
 }
 .message {
   border: 1px solid black;

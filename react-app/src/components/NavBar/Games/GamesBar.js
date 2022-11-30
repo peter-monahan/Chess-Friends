@@ -69,7 +69,7 @@ function GamesBar({setDisplay}) {
         const game = games[key];
 
         return (
-          <Link to={`games/${game.id}`} key={key}>
+          <Link to={`/games/${game.id}`} key={key}>
             {game.opponent.username}
           </Link>
         )
