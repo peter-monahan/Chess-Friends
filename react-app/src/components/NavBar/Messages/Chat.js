@@ -22,9 +22,12 @@ function Chat({setDisplay, chat}) {
   }
   useEffect(() => {
     document.addEventListener('click', handleClick);
-    dispatch(getAllMessages(otherUser.id))
+    const  func = async () => {
+      await dispatch(getAllMessages(otherUser.id))
+      divRef.current?.scrollIntoView()
+    }
     divRef.current?.scrollIntoView()
-
+    func()
     return () => {
       document.removeEventListener('click', handleClick)
     }
@@ -33,6 +36,16 @@ function Chat({setDisplay, chat}) {
     divRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+
+  useEffect(() => {
+    const tempArr = []
+    if(newMessage.length > 0) {
+      if(newMessage.split(' ').join('\n').split('\n').length === newMessage.length+1) {
+        tempArr.push('Must contain at least one character')
+      }
+    }
+    setErrors(tempArr)
+  }, [newMessage]);
 //   const Message = ({message}) => {
 //     let owned;
 //     if(message.sender_id === sessionUser.id) {
@@ -58,12 +71,12 @@ const createNewMessage = (e) => {
   const payload = {
     content: newMessage
   }
-  // if(errors.length) {
-  //   setDisplayErrors(true);
-  // } else {
+  if(errors.length) {
+    setNewMessage('');
+  } else {
     dispatch(createMessage(payload, otherUser.id));
     setNewMessage('');
-  // }
+  }
 }
 
   const Messages = () => (
@@ -85,12 +98,12 @@ const createNewMessage = (e) => {
 
   const ResponseBox = (
       <div id="message-bar-chat-bar" className="response-box">
-        <textarea maxLength='200' rows='5' cols='50'
-        placeholder='Send a message' className="comment-textarea"
+        <textarea maxLength='200' rows='4' cols='40'
+        placeholder='Send a message' className="message-textarea"
         value={newMessage} onChange={e => setNewMessage(e.target.value)}
         id="message-bar-chat-bar">
         </textarea>
-        <button id="message-bar-chat-bar" onClick={createNewMessage}>Send</button>
+        <button id="message-bar-chat-bar" className="send-button" onClick={createNewMessage} disabled={newMessage.length <= 0}>Send</button>
       </div>
     )
 

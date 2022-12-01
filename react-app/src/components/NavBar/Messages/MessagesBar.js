@@ -8,7 +8,7 @@ import './MessagesBar.css';
 function MessagesBar({setDisplay}) {
   const dispatch = useDispatch()
   const chats = useSelector(state => state.chats);
-  // const sessionUser = useSelector(state => state.session.user);
+  const sessionUser = useSelector(state => state.session.user);
 
   function handleClick(e) {
     const targ = e.target;
@@ -33,9 +33,7 @@ function MessagesBar({setDisplay}) {
         const chat = chats[key];
 
         return (
-          <div>
-            <ChatButton chat={chat} />
-          </div>
+            <ChatButton chat={chat} userId={sessionUser.id} />
         )
       })}
     </>

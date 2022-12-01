@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
+
 
 import Chat from "./Chat";
 
 
-function ChatButton({chat}) {
+function ChatButton({chat, userId}) {
   const [display1, setDisplay1] = useState(false);
   const [active, setActive] = useState('');
 
@@ -19,6 +20,7 @@ function ChatButton({chat}) {
     <>
       <div id="message-bar" className={`chat-button ${active}`} onClick={() => setDisplay1(!display1)}>
         {chat.user.username}
+        { chat.message !== null && <div id="message-bar" className="recent-message">{chat.message.sender_id === userId ? 'You: ' : ''}{chat.message.content}</div>}
       </div>
 
       {display1 && <Chat setDisplay={setDisplay1} chat={chat} />}
