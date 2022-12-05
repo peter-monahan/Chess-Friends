@@ -37,12 +37,14 @@ transform: translateY(1px);
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 20%;
 }
 
 .game-requests-info {
   width: 100%;
   border-top: 1px solid black;
-  height: 150px;
+  overflow: auto;
+  height: 100%;
 }
 .game-requests .active {
   /* background-color: rgb(52, 50, 47); */
@@ -54,6 +56,8 @@ transform: translateY(1px);
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 80%;
+
 }
 
 .games-info {
@@ -62,4 +66,20 @@ transform: translateY(1px);
   align-items: center;
   width: 100%;
   border-top: 1px solid black;
+  overflow: auto;
+  height: 100%;
+}
+
+.game-button {
+  border: 1px solid black;
+  width: 150px;
+  cursor: pointer;
+  padding: 8px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.turn-text {
+  font-size: small;
+  color: rgba(255, 255, 255, 0.445);
 }

@@ -72,15 +72,16 @@ export const acceptGameRequest = (requestId) => async (dispatch) => {
 
 
 //DELETE Comment
-export const deleteAGame = (gameId) => async (dispatch) => {
+export const forfeiteGame = (gameId) => async (dispatch) => {
   const res = await myFetch(`/api/games/${gameId}`, {
     method: 'DELETE'
   });
-  const response = await res.json();
+
   if (res.ok) {
-    dispatch(deleteGame(gameId));
+    const game = await res.json();
+    dispatch(addGame(game));
   }
-  return response;
+
 };
 
 
@@ -93,6 +94,9 @@ export const makeAMove = (gameId, move) => async (dispatch) => {
   if (res.ok) {
     const game = await res.json();
     dispatch(addGame(game));
+  } else {
+    const response = res.json()
+    console.log(response)
   }
 };
 

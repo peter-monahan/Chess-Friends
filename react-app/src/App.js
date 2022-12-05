@@ -60,6 +60,9 @@ function App() {
         dispatch(addGame(game));
         dispatch(deleteGameRequest(requestId, 'sent'))
       });
+      socket.on('update_game', (game) => {
+        dispatch(addGame(game));
+      });
       socket.onAny((message, ...args) => {
         console.log(message, args)
       })

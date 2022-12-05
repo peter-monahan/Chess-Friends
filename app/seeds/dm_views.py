@@ -3,8 +3,8 @@ from app.models import db, User, Friend_Request, Game_History, Game, Game_Reques
 
 def seed_dms():
 
-  user1 = User.query.filter(User.username == 'Demo').first()
-  user2 = User.query.filter(User.username == 'hensell').first()
+  user1 = User.query.filter(User.username == 'Demo1').first()
+  user2 = User.query.filter(User.username == 'Demo2').first()
   james = User.query.filter(User.username == 'james').first()
   magnus = User.query.filter(User.username == 'magnus').first()
 

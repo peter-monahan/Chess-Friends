@@ -23,11 +23,14 @@ class Game:
       'black': self.pieces['black']['black,king,00']
     }
     self.opponent_line_of_sight = []
-    self.checks = [],
+    self.checks = []
     self.pinned_pieces = {}
     self.valid_moves = []
     self.turn = data['turn']
     self.next_id = data['next_id']
+    self.history = data['history']
+    self.forfeit = data['forfeit']
+    self.winner = data['winner']
     self.checkmate = False
     self.stalemate = False
 
@@ -68,6 +71,7 @@ class Game:
     if not self.valid_moves:
       if self.checks:
         self.checkmate = True
+        self.winner = self.turn[1]
       else:
         self.stalemate = True
 
@@ -82,10 +86,15 @@ class Game:
     'next_id': self.next_id,
     'stalemate': self.stalemate,
     'checkmate': self.checkmate,
-    'checks': self.checks
+    'checks': self.checks,
+    'history': self.history,
+    'forfeit': self.forfeit,
+    'winner': self.winner
     }
 
   def move(self, old_coords, new_coords):
+    if self.checkmate or self.stalemate or self.forfeit:
+      return False
     id = self.board[old_coords[0]][old_coords[1]]
     if id[:5] != self.turn[0]:
       return False
@@ -94,9 +103,20 @@ class Game:
 
     if new_coords in piece.valid_moves:
       piece.move(new_coords)
+      self.history.append([old_coords, new_coords])
       return True
     else:
       return False
+
+  def forfeit_game(self, color):
+    if color == 'black':
+      self.forfeit = color
+      self.winner = 'white'
+    elif color == 'white':
+      self.forfeit = color
+      self.winner = 'black'
+    else :
+      raise ValueError("color must be either 'black' or 'white'")
   # def select(self, coordStr):
   #   [row, col] = coordStr.split(',')
 

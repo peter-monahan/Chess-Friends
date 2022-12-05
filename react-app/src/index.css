@@ -14,3 +14,20 @@ body {
   color: white;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
+
+.active-true {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: greenyellow;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.active-false {
+  display: none;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}

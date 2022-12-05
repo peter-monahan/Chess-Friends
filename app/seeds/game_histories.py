@@ -3,8 +3,8 @@ from app.models import db, User, Friend_Request, Game_History, Game, Game_Reques
 
 def seed_game_histories():
 
-  Demo = User.query.filter(User.username == 'Demo').first()
-  hensell = User.query.filter(User.username == 'hensell').first()
+  Demo = User.query.filter(User.username == 'Demo1').first()
+  Demo2 = User.query.filter(User.username == 'Demo2').first()
   baylen = User.query.filter(User.username == 'baylen').first()
   zaviar = User.query.filter(User.username == 'zaviar').first()
   james = User.query.filter(User.username == 'james').first()
@@ -13,9 +13,9 @@ def seed_game_histories():
   game1 = Game_History(game_id=1, white_id=Demo.id, black_id=magnus.id, json_data="{data}")
   game2 = Game_History(game_id=2, white_id=magnus.id, black_id=zaviar.id, json_data="{data}")
   game3 = Game_History(game_id=3, white_id=james.id, black_id=baylen.id, json_data="{data}")
-  game4 = Game_History(game_id=4, white_id=hensell.id, black_id=magnus.id, json_data="{data}")
+  game4 = Game_History(game_id=4, white_id=Demo2.id, black_id=magnus.id, json_data="{data}")
   game5 = Game_History(game_id=5, white_id=baylen.id, black_id=Demo.id, json_data="{data}")
-  game6 = Game_History(game_id=6, white_id=hensell.id, black_id=Demo.id, json_data="{data}")
+  game6 = Game_History(game_id=6, white_id=Demo2.id, black_id=Demo.id, json_data="{data}")
 
   db.session.add(game1)
   db.session.add(game2)

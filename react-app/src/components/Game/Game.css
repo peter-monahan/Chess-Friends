@@ -5,15 +5,40 @@
   width: 500px;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  /* transform: rotate(180deg); */
 }
 
 .tile {
-  height: 100%;
+  box-sizing: border-box;
+  height: 12.5%;
   width: 12.5%;
   padding: 0;
   margin: 0;
-  /* border: 1px solid black; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.tile-valid {
+  border: 5px solid lawngreen;
+}
+
+.tile-selected {
+  border: 5px solid lightseagreen;
+}
+
+.tile-moved {
+  border: 5px solid yellow;
+}
+
+.player-black {
+  transform: rotate(180deg);
+}
+/* .tile:hover {
+  border: 2px solid greenyellow;
+} */
 
 .game-board-row {
   width: 100%;
@@ -31,89 +56,42 @@
   background-color: white;
 }
 
-
-
-/* .black,Pawn {
-  background-image: url(images/black,Pawn.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
+.black-pawn {
+height: 0;
+width: 0;
+overflow: visible;
+transition: transform 0.6s;
+/* z-index: 5; */
+/* position: fixed; */
+/* transform: translate(0, -62.5px); */
 }
 
-
-.white,Pawn {
-  background-image: url(images/white,Pawn.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
-} */
-
-/* .black,Rook {
-  background-image: url(./images/blackPieces/blackRook.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
+.black-pawn-img {
+height: 62.5px;
+width: 62.5px;
 }
 
-.white,Rook {
-  background-image: url(./images/whitePieces/whiteRook.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
+.outer-game-board {
+  width: fit-content;
+  height: fit-content;
 }
 
-.black,Knight {
-  background-image: url(./images/blackPieces/blackKnight.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
+.user-icon-img {
+  margin: 0px;
+  width:32px;
+  height:32px;
+  object-fit:cover;
+  border-radius:50%;
+  background-color: rgb(142, 142, 142);
 }
 
-.white,Knight {
-  background-image: url(./images/whitePieces/whiteKnight.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
+.game-player-div {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
 }
 
-.black,Bishop {
-  background-image: url(./images/blackPieces/blackBishop.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
+.board-container {
+  display: flex;
+  align-items: center;
 }
-
-.white,Bishop {
-  background-image: url(./images/whitePieces/whiteBishop.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
-}
-
-.black,Queen {
-  background-image: url(./images/blackPieces/blackQueen.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
-}
-
-.white,Queen {
-  background-image: url(./images/whitePieces/whiteQueen.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
-}
-
-.black,King {
-  background-image: url(./images/blackPieces/blackKing.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
-}
-
-.white,King {
-  background-image: url(./images/whitePieces/whiteKing.png);
-  background-size:cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
-} */

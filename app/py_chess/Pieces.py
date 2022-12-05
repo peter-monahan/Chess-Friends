@@ -165,13 +165,14 @@ class Pawn(ShortRangePiece):
     if new_coordinates == self.double_move:
       self.en_passantable = True
     elif self.en_passant_move.get(','.join([str(num) for num in new_coordinates ])):
-      old_piece_key = self.en_passant_move[new_coordinates.join(',')]
+      old_piece_key = self.en_passant_move[','.join([str(num) for num in new_coordinates ])]
       old_piece = self.game.pieces[old_piece_key[:5]][old_piece_key]
       [oldRow, oldCol] = old_piece.curr_coords
       self.game.board[oldRow][oldCol] = None
     else:
       old_piece_key = self.game.board[new_row][new_col]
-      old_piece = self.game.pieces[old_piece_key[:5]][old_piece_key]
+      if old_piece_key:
+        old_piece = self.game.pieces[old_piece_key[:5]][old_piece_key]
 
 
     if (old_piece):
@@ -239,7 +240,7 @@ class Pawn(ShortRangePiece):
 
 
     if self.game.pinned_pieces.get(','.join([str(num) for num in self.curr_coords])):
-      res = [square for square in res if square in self.game.pinned_pieces[','.join(self.curr_coords)]]
+      res = [square for square in res if square in self.game.pinned_pieces[','.join([str(num) for num in self.curr_coords])]]
 
 
     self.valid_moves = res
@@ -300,19 +301,19 @@ class King(ShortRangePiece):
     [new_row, new_col] = new_coordinates
     old_piece = self.game.board[new_row][new_col]
 
-    if self.castle_move[','.join(new_coordinates)]:
-      rook = self.castle_move[','.join(new_coordinates)]['piece']
-      [rookRow, rookCol] = self.castle_move[','.join(new_coordinates)]['spot']
+    if self.castle_move.get(','.join([str(num) for num in new_coordinates])):
+      rook = self.castle_move[','.join([str(num) for num in new_coordinates])]['piece']
+      [rookRow, rookCol] = self.castle_move[','.join([str(num) for num in new_coordinates])]['spot']
       [oldRookRow, oldRookCol] = rook.curr_coords
 
       self.game.board[oldRookRow][oldRookCol] = None
       self.game.board[rookRow][rookCol] = rook
-      rook.curr_coords = self.castle_move[','.join(new_coordinates)].spot
+      rook.curr_coords = self.castle_move[','.join([str(num) for num in new_coordinates])].spot
       rook.times_moved += 1
 
 
     if old_piece:
-      del self.game[f'{old_piece[:5]}_pieces'][old_piece]
+      del self.game.pieces[old_piece[:5]][old_piece]
 
 
 
@@ -352,7 +353,7 @@ class King(ShortRangePiece):
 
           if self.game.board[row][col]:
             pieceStr = self.game.board[row][col]
-            foundPiece = friendly_pieces[pieceStr]
+            foundPiece = friendly_pieces.get(pieceStr)
 
 
         if foundPiece and foundPiece.id[6:10] == 'rook' and foundPiece.times_moved == 0:
@@ -390,7 +391,7 @@ class King(ShortRangePiece):
 
 
         if (len(pieces) == 2) and (pieces[0][:5] == self.color) and (pieces[1][:5] != self.color) and (pieces[1][6:10] in threats):
-          res[','.join(self.game.pieces[self.color][pieces[0]].curr_coords)] = pinnedMoves
+          res[','.join([str(num) for num in self.game.pieces[self.color][pieces[0]].curr_coords])] = pinnedMoves
 
     return res
 

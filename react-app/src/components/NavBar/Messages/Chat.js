@@ -98,7 +98,15 @@ const createNewMessage = (e) => {
 
   const ResponseBox = (
       <div id="message-bar-chat-bar" className="response-box">
-        <textarea maxLength='200' rows='4' cols='40'
+        <textarea maxLength='200' rows={newMessage.split(' ').join('').split('\n').reduce((acc, curr) => {
+            if(acc >= 6) {
+              return 6;
+            }
+            if(curr.length === 0 ) {
+              return acc + 1
+            }
+            return acc + Math.ceil(curr.length / 40)
+            }, 1) } cols='40'
         placeholder='Send a message' className="message-textarea"
         value={newMessage} onChange={e => setNewMessage(e.target.value)}
         id="message-bar-chat-bar">
@@ -113,7 +121,7 @@ const createNewMessage = (e) => {
       <div id="message-bar-chat-bar" className="messages-container">
         <div className="messages" id="message-bar-chat-bar">
           {messages[otherUser.id] !== undefined && <Messages />}
-          <div ref={divRef}></div>
+          <div ref={divRef} className="dummy-div"></div>
         </div>
       </div>
       {ResponseBox}

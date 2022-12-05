@@ -22,7 +22,7 @@ function GamesBar({setDisplay}) {
 
   const acceptButton = async (requestId) => {
     const id = await dispatch(acceptGameRequest(requestId))
-    history.replace(`games/${id}`);
+    history.replace(`/games/${id}`);
   }
   useEffect(() => {
     document.addEventListener('click', handleClick);
@@ -67,10 +67,12 @@ function GamesBar({setDisplay}) {
     <>
       {Object.keys(games).map(key => {
         const game = games[key];
-
+        const [playerColor, enemyColor] = game?.opponent.id === game?.white_id ? ['black', 'white'] : ['white', 'black'];
+        const yourTurn = game.data.turn[0] === playerColor;
         return (
-          <Link to={`/games/${game.id}`} key={key}>
-            {game.opponent.username}
+          <Link className="game-button" to={`/games/${game.id}`} key={key}>
+            {game.opponent.username}<div className={`active-${game.opponent.active}`}></div>
+            <div className="turn-text">{ yourTurn ? 'Your turn' : `${game.opponent.username}'s turn`}</div>
           </Link>
         )
       })}
