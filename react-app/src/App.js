@@ -30,7 +30,9 @@ function App() {
       await dispatch(authenticate());
       setLoaded(true);
     })();
+    dispatch(getAllUsers())
   }, [dispatch]);
+
 
   useEffect(() => {
     if(user) {
