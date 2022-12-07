@@ -17,6 +17,7 @@ import {addFriend} from './store/friends';
 import {deleteFriendRequest} from './store/friendRequests';
 import {addGame} from './store/games';
 import {deleteGameRequest, addGameRequest} from './store/gameRequests';
+import {getAllUsers} from './store/users';
 
 let socket;
 
