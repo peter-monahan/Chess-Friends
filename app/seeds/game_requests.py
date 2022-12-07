@@ -3,19 +3,19 @@ from app.models import db, User, Friend_Request, Game_History, Game, Game_Reques
 
 def seed_game_requests():
 
-  Demo = User.query.filter(User.username == 'Demo').first()
-  hensell = User.query.filter(User.username == 'hensell').first()
+  Demo = User.query.filter(User.username == 'Demo1').first()
+  Demo2 = User.query.filter(User.username == 'Demo2').first()
   baylen = User.query.filter(User.username == 'baylen').first()
   zaviar = User.query.filter(User.username == 'zaviar').first()
   james = User.query.filter(User.username == 'james').first()
-  magnus = User.query.filter(User.username == 'magnus').first()
+  blake = User.query.filter(User.username == 'blake').first()
 
   game1 = Game_Request(user_id=zaviar.id, opponent_id=Demo.id)
-  game2 = Game_Request(user_id=magnus.id, opponent_id=baylen.id)
-  game3 = Game_Request(user_id=james.id, opponent_id=magnus.id)
-  game4 = Game_Request(user_id=hensell.id, opponent_id=james.id)
+  game2 = Game_Request(user_id=blake.id, opponent_id=baylen.id)
+  game3 = Game_Request(user_id=james.id, opponent_id=blake.id)
+  game4 = Game_Request(user_id=Demo2.id, opponent_id=james.id)
   game5 = Game_Request(user_id=baylen.id, opponent_id=zaviar.id)
-  game6 = Game_Request(user_id=hensell.id, opponent_id=baylen.id)
+  game6 = Game_Request(user_id=Demo2.id, opponent_id=baylen.id)
 
   db.session.add(game1)
   db.session.add(game2)

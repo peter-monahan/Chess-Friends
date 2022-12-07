@@ -602,7 +602,10 @@ default = {
     "turn": [
         "white",
         "black"
-    ]
+    ],
+    "history": [],
+    "forfeit": False,
+    "winner": None,
 }
 # default = {
 #   'next_id': 15,

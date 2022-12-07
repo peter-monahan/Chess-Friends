@@ -8,6 +8,7 @@ import friendRequests from './friendRequests';
 import games from './games';
 import gameRequests from './gameRequests';
 import users from './users';
+import view from './view';
 
 
 const rootReducer = combineReducers({
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   friends,
   friendRequests,
   users,
+  view,
 });
 
 

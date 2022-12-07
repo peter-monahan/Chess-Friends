@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../store/users';
+import { getAllUsers } from '../../store/users';
 import { NavLink } from 'react-router-dom';
 
 function UsersList() {

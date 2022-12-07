@@ -66,6 +66,23 @@ class User(db.Model, UserMixin):
       'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
     }
 
+  def to_dict_with_friend(self, session_id):
+    user = User.query.get(session_id)
+    if self in user.friends:
+      is_friend = True
+    else:
+      is_friend = False
+    return {
+      'id': self.id,
+      'username': self.username,
+      'profile_image_url': self.profile_image_url,
+      'bio': self.bio,
+      'active': bool(self.session_id),
+      'is_friend': is_friend,
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+    }
+
   def to_dict_little(self):
     # May add is_friend bool at a later date
     return {

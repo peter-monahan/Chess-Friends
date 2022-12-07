@@ -3,23 +3,23 @@ from app.models import db, User, Friend_Request, Game_History, Game, Game_Reques
 
 def seed_friends():
 
-  Demo = User.query.filter(User.username == 'Demo').first()
-  hensell = User.query.filter(User.username == 'hensell').first()
+  Demo = User.query.filter(User.username == 'Demo1').first()
+  Demo2 = User.query.filter(User.username == 'Demo2').first()
   baylen = User.query.filter(User.username == 'baylen').first()
   zaviar = User.query.filter(User.username == 'zaviar').first()
   james = User.query.filter(User.username == 'james').first()
-  magnus = User.query.filter(User.username == 'magnus').first()
+  blake = User.query.filter(User.username == 'blake').first()
 
-  hensell.befriend(Demo)
-  hensell.befriend(zaviar)
-  hensell.befriend(james)
+  Demo2.befriend(Demo)
+  Demo2.befriend(zaviar)
+  Demo2.befriend(james)
 
 
   baylen.befriend(james)
   baylen.befriend(zaviar)
-
-  print(f'hensell\'s friends {[friend.to_dict() for friend in hensell.friends]}')
-  print(f'magnus\' friends {[friend.to_dict() for friend in magnus.friends]}')
+  baylen.befriend(blake)
+  # print(f'Demo2\'s friends {[friend.to_dict() for friend in Demo2.friends]}')
+  # print(f'blake\'s friends {[friend.to_dict() for friend in blake.friends]}')
 
   db.session.commit()
 

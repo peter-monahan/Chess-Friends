@@ -3,18 +3,17 @@ from app.models import db, User, Friend_Request, Game_History, Game, Game_Reques
 
 def seed_dms():
 
-  user1 = User.query.filter(User.username == 'Demo').first()
-  user2 = User.query.filter(User.username == 'hensell').first()
-  james = User.query.filter(User.username == 'james').first()
-  magnus = User.query.filter(User.username == 'magnus').first()
+  user1 = User.query.filter(User.username == 'Demo1').first()
+  user2 = User.query.filter(User.username == 'Demo2').first()
+
 
   dm1 = Dm_View(user_id=user1.id, other_user_id=user2.id)
   dm2 = Dm_View(user_id=user2.id, other_user_id=user1.id)
-  dm3 = Dm_View(user_id=james.id, other_user_id=magnus.id)
+
 
   db.session.add(dm1)
   db.session.add(dm2)
-  db.session.add(dm3)
+
 
 
 

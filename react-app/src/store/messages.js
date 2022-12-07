@@ -120,7 +120,12 @@ export default function reducer(state = initialState, action) {
       newState[action.userId] = action.messages
       return newState
     case ADD_MESSAGE:
-      newState[action.userId][action.message.id] = action.message;
+      if(newState[action.userId]) {
+        newState[action.userId][action.message.id] = action.message;
+      } else {
+        newState[action.userId] = {};
+        newState[action.userId][action.message.id] = action.message;
+      }
       return newState;
     case DELETE_MESSAGE:
       delete newState[action.userId][action.messageId]

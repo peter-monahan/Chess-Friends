@@ -92,8 +92,8 @@ class LongRangePiece(Piece):
 
           if [row, col] == enemy_king.curr_coords:
             self.game.checks.append(checkArr)
-        else:
-            checkArr.append([row,col])
+          else:
+              checkArr.append([row,col])
 
     return res
 
@@ -165,13 +165,14 @@ class Pawn(ShortRangePiece):
     if new_coordinates == self.double_move:
       self.en_passantable = True
     elif self.en_passant_move.get(','.join([str(num) for num in new_coordinates ])):
-      old_piece_key = self.en_passant_move[new_coordinates.join(',')]
+      old_piece_key = self.en_passant_move[','.join([str(num) for num in new_coordinates ])]
       old_piece = self.game.pieces[old_piece_key[:5]][old_piece_key]
       [oldRow, oldCol] = old_piece.curr_coords
       self.game.board[oldRow][oldCol] = None
     else:
       old_piece_key = self.game.board[new_row][new_col]
-      old_piece = self.game.pieces[old_piece_key[:5]][old_piece_key]
+      if old_piece_key:
+        old_piece = self.game.pieces[old_piece_key[:5]][old_piece_key]
 
 
     if (old_piece):
@@ -239,7 +240,7 @@ class Pawn(ShortRangePiece):
 
 
     if self.game.pinned_pieces.get(','.join([str(num) for num in self.curr_coords])):
-      res = [square for square in res if square in self.game.pinned_pieces[','.join(self.curr_coords)]]
+      res = [square for square in res if square in self.game.pinned_pieces[','.join([str(num) for num in self.curr_coords])]]
 
 
     self.valid_moves = res
@@ -299,20 +300,21 @@ class King(ShortRangePiece):
     [curr_row, curr_col] = self.curr_coords
     [new_row, new_col] = new_coordinates
     old_piece = self.game.board[new_row][new_col]
+    coords_str = ','.join([str(num) for num in new_coordinates])
+    if self.castle_move.get(coords_str):
+      rookStr = self.castle_move[coords_str]['piece']
+      rook = self.game.pieces[rookStr[:5]][rookStr]
+      [rook_row, rook_col] = self.castle_move[coords_str]['spot']
+      [old_rook_row, old_rook_col] = rook.curr_coords
 
-    if self.castle_move[','.join(new_coordinates)]:
-      rook = self.castle_move[','.join(new_coordinates)]['piece']
-      [rookRow, rookCol] = self.castle_move[','.join(new_coordinates)]['spot']
-      [oldRookRow, oldRookCol] = rook.curr_coords
-
-      self.game.board[oldRookRow][oldRookCol] = None
-      self.game.board[rookRow][rookCol] = rook
-      rook.curr_coords = self.castle_move[','.join(new_coordinates)].spot
+      self.game.board[old_rook_row][old_rook_col] = None
+      self.game.board[rook_row][rook_col] = rookStr
+      rook.curr_coords = [rook_row, rook_col]
       rook.times_moved += 1
 
 
     if old_piece:
-      del self.game[f'{old_piece[:5]}_pieces'][old_piece]
+      del self.game.pieces[old_piece[:5]][old_piece]
 
 
 
@@ -343,8 +345,9 @@ class King(ShortRangePiece):
 
       for direction in leftRight:
         [row, col] = self.curr_coords
-        castle_move = f'{row},{(direction * 2) + col}'
-        dependantMove = f'{row},{direction + col}'
+        castle_move = [row, (direction * 2) + col]
+        castle_move_str = f'{row},{(direction * 2) + col}'
+        dependantMove = [row,direction + col]
         foundPiece = None
 
         while col+direction in range(8) and  not foundPiece:
@@ -352,12 +355,12 @@ class King(ShortRangePiece):
 
           if self.game.board[row][col]:
             pieceStr = self.game.board[row][col]
-            foundPiece = friendly_pieces[pieceStr]
+            foundPiece = friendly_pieces.get(pieceStr)
 
 
         if foundPiece and foundPiece.id[6:10] == 'rook' and foundPiece.times_moved == 0:
           if dependantMove in res and not (castle_move in self.game.opponent_line_of_sight):
-            self.castle_move[castle_move] = {'piece': foundPiece, 'spot': [int(num) for num in dependantMove.split(',')]}
+            self.castle_move[castle_move_str] = {'piece': pieceStr, 'spot': dependantMove}
             res.append(castle_move)
 
 
@@ -383,14 +386,14 @@ class King(ShortRangePiece):
           row += rowDir
           col += colDir
 
-          pinnedMoves.append(f'{row},{col}')
+          pinnedMoves.append([row, col])
 
           if self.game.board[row][col]:
             pieces.append(self.game.board[row][col])
 
 
         if (len(pieces) == 2) and (pieces[0][:5] == self.color) and (pieces[1][:5] != self.color) and (pieces[1][6:10] in threats):
-          res[','.join(self.game.pieces[self.color][pieces[0]].curr_coords)] = pinnedMoves
+          res[','.join([str(num) for num in self.game.pieces[self.color][pieces[0]].curr_coords])] = pinnedMoves
 
     return res
 

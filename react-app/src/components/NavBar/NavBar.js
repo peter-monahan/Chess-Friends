@@ -5,8 +5,11 @@ import LogoutButton from '../auth/LogoutButton';
 import GamesButton from './Games/GamesButton'
 import FriendsButton from './Friends/FriendsButton';
 import MessagesButton from './Messages/MessagesButton';
+import { login } from '../../store/session';
+
 import './NavBar.css'
 const NavBar = () => {
+  const dispatch = useDispatch()
   const sessionUser = useSelector(state => state.session.user);
   if(!sessionUser) {
     return (
@@ -20,6 +23,9 @@ const NavBar = () => {
       <NavLink to='/sign-up' exact={true} className='nav-item' activeClassName='active'>
         SignUp
       </NavLink>
+      <div className='nav-item demo-users' onClick={() => dispatch(login('demo1@aa.io', 'password'))}>Demo User 1 </div>
+      <div className='nav-item' onClick={() => dispatch(login('demo2@aa.io', 'password'))}>Demo User 2</div>
+
     </nav>
     )
   }

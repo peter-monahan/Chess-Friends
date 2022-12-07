@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { login } from '../../store/session';
-
+import './auth.css'
 const LoginForm = () => {
   const [errors, setErrors] = useState([]);
   const [email, setEmail] = useState('');
@@ -31,13 +31,13 @@ const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={onLogin}>
+    <form className='signup-form' onSubmit={onLogin}>
       <div>
         {errors.map((error, ind) => (
           <div key={ind}>{error}</div>
         ))}
       </div>
-      <div>
+      <div className='form-element'>
         <label htmlFor='email'>Email</label>
         <input
           name='email'
@@ -47,7 +47,7 @@ const LoginForm = () => {
           onChange={updateEmail}
         />
       </div>
-      <div>
+      <div className='form-element'>
         <label htmlFor='password'>Password</label>
         <input
           name='password'
@@ -56,8 +56,16 @@ const LoginForm = () => {
           value={password}
           onChange={updatePassword}
         />
-        <button type='submit'>Login</button>
       </div>
+        <button type='submit'>Login</button>
+        {/* <button onClick={e => {
+          e.preventDefault()
+          dispatch(login('demo1@aa.io', 'password'))
+        }}>Demo User 1 Login</button>
+        <button onClick={e => {
+          e.preventDefault()
+          dispatch(login('demo2@aa.io', 'password'))
+        }}>Demo User 2 Login</button> */}
     </form>
   );
 };

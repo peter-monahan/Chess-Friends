@@ -11,6 +11,7 @@
   align-items: center;
   background-color: rgb(56, 54, 51);
   color: rgb(241, 241, 241);
+  z-index: 10;
   /* row-gap: 7px; */
 }
 
@@ -44,4 +45,9 @@
 
 .nav-item.active {
   background-color: rgb(52, 50, 47);
+}
+
+.demo-users {
+  margin-top: 15px;
+  border-top: 1px solid rgb(27, 27, 27);
 }
