@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 function UsersList() {
   const dispatch = useDispatch()
   const users = useSelector(state => state.users);
+
   useEffect(() => {
     dispatch(getAllUsers())
   }, []);
