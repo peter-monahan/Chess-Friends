@@ -53,14 +53,17 @@ def delete_friendship(id):
 def create_friend_request():
   form = FriendRequestForm()
   if form.validate_on_submit:
-    receiver = User.query.get(form.data['receiver_id']) # ALERT MAY NEED TO BE INT WATCHOUT FOR BUGS
-    friend_request = Friend_Request(sender_id=current_user.id, receiver_id=form.data['receiver_id'])
-    db.session.add(friend_request)
-    db.session.commit()
-    if receiver.session_id:
-      socketio.emit('new_friend_request', friend_request.to_dict(),
-                  room=receiver.session_id)
-    return friend_request.to_dict()
+    if current_user.id != form.data['receiver_id']:
+      receiver = User.query.get(form.data['receiver_id']) # ALERT MAY NEED TO BE INT WATCHOUT FOR BUGS
+      friend_request = Friend_Request(sender_id=current_user.id, receiver_id=form.data['receiver_id'])
+      db.session.add(friend_request)
+      db.session.commit()
+      if receiver.session_id:
+        socketio.emit('new_friend_request', friend_request.to_dict(),
+                    room=receiver.session_id)
+      return friend_request.to_dict()
+    else:
+      return {'errors': ['Cannot send friend request to self']}
   else:
     return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 

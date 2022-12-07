@@ -39,10 +39,12 @@ function GamesBar({setDisplay}) {
       {Object.keys(gameRequests.received).map(key => {
         const request = gameRequests.received[key];
         return (
-          <div key={key} id='game-bar'>
+          <div key={key} id='game-bar' className="game-request">
             {request.sender.username}
+            <div id='game-bar'>
             <button onClick={() => acceptButton(request.id)}>Accept</button>
             <button onClick={() => dispatch(deleteAGameRequest(request.id))} id="game-bar">Decline</button>
+            </div>
           </div>
         )
       })}
@@ -54,7 +56,7 @@ function GamesBar({setDisplay}) {
       {Object.keys(gameRequests.sent).map(key => {
         const request = gameRequests.sent[key];
         return (
-          <div key={key} id='game-bar'>
+          <div key={key} id='game-bar' className="game-request">
             {request.receiver.username}
             <button onClick={() => dispatch(deleteAGameRequest(request.id))} id='game-bar'>Delete</button>
           </div>
@@ -81,7 +83,6 @@ function GamesBar({setDisplay}) {
 
   return (
     <div className="game-bar" id="game-bar">
-      <button>New Game</button>
       <div id='game-bar' className="game-requests">
         Game Requests
         <div className="game-sent-received" id="game-bar">

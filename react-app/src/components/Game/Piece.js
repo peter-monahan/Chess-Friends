@@ -29,7 +29,7 @@ function Piece({start, pieceStr, game, selected, setSelected, playerColor}) {
   const dispatch = useDispatch()
   const liveGame = useSelector(state => state.games[game.id])
   const color = pieceStr.slice(0,5)
-  const piece = liveGame.data.pieces[color][pieceStr]
+  const piece = liveGame?.data.pieces[color][pieceStr]
   const [valid, setValid] = useState('');
 
   let owned;

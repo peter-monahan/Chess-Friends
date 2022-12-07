@@ -92,8 +92,8 @@ class LongRangePiece(Piece):
 
           if [row, col] == enemy_king.curr_coords:
             self.game.checks.append(checkArr)
-        else:
-            checkArr.append([row,col])
+          else:
+              checkArr.append([row,col])
 
     return res
 
@@ -300,15 +300,16 @@ class King(ShortRangePiece):
     [curr_row, curr_col] = self.curr_coords
     [new_row, new_col] = new_coordinates
     old_piece = self.game.board[new_row][new_col]
+    coords_str = ','.join([str(num) for num in new_coordinates])
+    if self.castle_move.get(coords_str):
+      rookStr = self.castle_move[coords_str]['piece']
+      rook = self.game.pieces[rookStr[:5]][rookStr]
+      [rook_row, rook_col] = self.castle_move[coords_str]['spot']
+      [old_rook_row, old_rook_col] = rook.curr_coords
 
-    if self.castle_move.get(','.join([str(num) for num in new_coordinates])):
-      rook = self.castle_move[','.join([str(num) for num in new_coordinates])]['piece']
-      [rookRow, rookCol] = self.castle_move[','.join([str(num) for num in new_coordinates])]['spot']
-      [oldRookRow, oldRookCol] = rook.curr_coords
-
-      self.game.board[oldRookRow][oldRookCol] = None
-      self.game.board[rookRow][rookCol] = rook
-      rook.curr_coords = self.castle_move[','.join([str(num) for num in new_coordinates])].spot
+      self.game.board[old_rook_row][old_rook_col] = None
+      self.game.board[rook_row][rook_col] = rookStr
+      rook.curr_coords = [rook_row, rook_col]
       rook.times_moved += 1
 
 
@@ -344,8 +345,9 @@ class King(ShortRangePiece):
 
       for direction in leftRight:
         [row, col] = self.curr_coords
-        castle_move = f'{row},{(direction * 2) + col}'
-        dependantMove = f'{row},{direction + col}'
+        castle_move = [row, (direction * 2) + col]
+        castle_move_str = f'{row},{(direction * 2) + col}'
+        dependantMove = [row,direction + col]
         foundPiece = None
 
         while col+direction in range(8) and  not foundPiece:
@@ -358,7 +360,7 @@ class King(ShortRangePiece):
 
         if foundPiece and foundPiece.id[6:10] == 'rook' and foundPiece.times_moved == 0:
           if dependantMove in res and not (castle_move in self.game.opponent_line_of_sight):
-            self.castle_move[castle_move] = {'piece': foundPiece, 'spot': [int(num) for num in dependantMove.split(',')]}
+            self.castle_move[castle_move_str] = {'piece': pieceStr, 'spot': dependantMove}
             res.append(castle_move)
 
 
@@ -384,7 +386,7 @@ class King(ShortRangePiece):
           row += rowDir
           col += colDir
 
-          pinnedMoves.append(f'{row},{col}')
+          pinnedMoves.append([row, col])
 
           if self.game.board[row][col]:
             pieces.append(self.game.board[row][col])

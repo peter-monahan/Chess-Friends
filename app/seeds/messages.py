@@ -5,8 +5,6 @@ def seed_messages():
 
   user1 = User.query.filter(User.username == 'Demo1').first()
   user2 = User.query.filter(User.username == 'Demo2').first()
-  # james = User.query.filter(User.username == 'james').first()
-  # magnus = User.query.filter(User.username == 'magnus').first()
 
   dm1 = Message(sender_id=user1.id, receiver_id=user2.id, content='Hi im demo1!')
   dm2 = Message(sender_id=user2.id, receiver_id=user1.id, content='Hey what\'s up?')
@@ -16,7 +14,6 @@ def seed_messages():
   dm6 = Message(sender_id=user2.id, receiver_id=user1.id, content='Got it')
 
 
-  # dm7 = Message(sender_id=james.id, receiver_id=magnus.id, content='yo bro')
 
   db.session.add(dm1)
   db.session.add(dm2)

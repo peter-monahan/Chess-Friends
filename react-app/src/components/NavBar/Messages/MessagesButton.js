@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import {FaComments} from 'react-icons/fa';
+import { useSelector } from "react-redux";
 import MessagesBar from "./MessagesBar";
 
 
 function MessagesButton() {
-  const [display1, setDisplay1] = useState(false);
+  const [display1, setDisplay1] = useState();
   const [active, setActive] = useState('');
-
+  const view = useSelector(state => state.view);
+  useEffect(() => {
+    if(view !== false) {
+      setDisplay1(true);
+    }
+  }, [view])
   useEffect(() => {
     if (display1) {
       setActive('active')

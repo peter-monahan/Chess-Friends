@@ -8,7 +8,7 @@ def seed_friends():
   baylen = User.query.filter(User.username == 'baylen').first()
   zaviar = User.query.filter(User.username == 'zaviar').first()
   james = User.query.filter(User.username == 'james').first()
-  magnus = User.query.filter(User.username == 'magnus').first()
+  blake = User.query.filter(User.username == 'blake').first()
 
   Demo2.befriend(Demo)
   Demo2.befriend(zaviar)
@@ -17,9 +17,9 @@ def seed_friends():
 
   baylen.befriend(james)
   baylen.befriend(zaviar)
-
-  print(f'Demo2\'s friends {[friend.to_dict() for friend in Demo2.friends]}')
-  print(f'magnus\' friends {[friend.to_dict() for friend in magnus.friends]}')
+  baylen.befriend(blake)
+  # print(f'Demo2\'s friends {[friend.to_dict() for friend in Demo2.friends]}')
+  # print(f'blake\'s friends {[friend.to_dict() for friend in blake.friends]}')
 
   db.session.commit()
 

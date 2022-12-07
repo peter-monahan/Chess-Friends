@@ -8,12 +8,12 @@ def seed_game_histories():
   baylen = User.query.filter(User.username == 'baylen').first()
   zaviar = User.query.filter(User.username == 'zaviar').first()
   james = User.query.filter(User.username == 'james').first()
-  magnus = User.query.filter(User.username == 'magnus').first()
+  blake = User.query.filter(User.username == 'blake').first()
 
-  game1 = Game_History(game_id=1, white_id=Demo.id, black_id=magnus.id, json_data="{data}")
-  game2 = Game_History(game_id=2, white_id=magnus.id, black_id=zaviar.id, json_data="{data}")
+  game1 = Game_History(game_id=1, white_id=Demo.id, black_id=blake.id, json_data="{data}")
+  game2 = Game_History(game_id=2, white_id=blake.id, black_id=zaviar.id, json_data="{data}")
   game3 = Game_History(game_id=3, white_id=james.id, black_id=baylen.id, json_data="{data}")
-  game4 = Game_History(game_id=4, white_id=Demo2.id, black_id=magnus.id, json_data="{data}")
+  game4 = Game_History(game_id=4, white_id=Demo2.id, black_id=blake.id, json_data="{data}")
   game5 = Game_History(game_id=5, white_id=baylen.id, black_id=Demo.id, json_data="{data}")
   game6 = Game_History(game_id=6, white_id=Demo2.id, black_id=Demo.id, json_data="{data}")
 

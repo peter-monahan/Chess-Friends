@@ -14,7 +14,7 @@ function GameTile({game, row, col, selected, setSelected}) {
   const [valid, setValid] = useState('');
 
   useEffect(() => {
-    const mostRecent = liveGame.data.history[liveGame.data.history.length-1]
+    const mostRecent = liveGame?.data.history[liveGame.data.history.length-1]
 
 
     if( selected && liveGame.data.pieces[selected.color][selected.pieceStr].valid_moves.some(coord => coord.join(',') === `${row},${col}`)) {

@@ -88,10 +88,10 @@ if(showEdit) {
   return (
     <div className={`chat-message-${side}`} id="message-bar-chat-bar">
       <div id="message-bar-chat-bar" className="message">
+          {display1 && <div id="message-bar-chat-bar" className="message-options"><button id="message-bar-chat-bar" onClick={() => setShowEdit(true)}>Edit</button><button id="message-bar-chat-bar" onClick={destroyMessage}>Delete</button></div>}
         <div id="message-bar-chat-bar" className="message-mid">
           <div className="message-body" id="message-bar-chat-bar">{message.content}</div>
           {owned && <div className="message-settings-button" id="message-bar-chat-bar" onClick={() => setDisplay1(!display1)}>⋮</div>}
-          {display1 && <div id="message-bar-chat-bar"><button id="message-bar-chat-bar" onClick={() => setShowEdit(true)}>Edit</button><button id="message-bar-chat-bar" onClick={destroyMessage}>Delete</button></div>}
         </div>
 
         {message.created_at !== message.updated_at && <div id="message-bar-chat-bar" className="edited-text">edited</div>}

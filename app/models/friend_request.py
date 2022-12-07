@@ -9,6 +9,8 @@ class Friend_Request(db.Model):
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, default=datetime.now)
 
+  __table_args__ = (db.UniqueConstraint('sender_id', 'receiver_id', name='_sender_receiver_uc'),)
+
   sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_friend_requests', lazy='joined')
   receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_friend_requests', lazy='joined')
 

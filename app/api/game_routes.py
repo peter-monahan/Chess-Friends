@@ -156,18 +156,21 @@ def get_game_requests():
 def create_game_request():
     form = GameRequestForm()
     if form.validate_on_submit:
+        if current_user.id != form.data['opponent_id']:
 
-        game_request = Game_Request(
-            user_id=current_user.id, opponent_id=form.data['opponent_id'])
-        db.session.add(game_request)
-        db.session.commit()
-        if form.data['opponent_id']:
-            # ALERT MAY NEED TO BE INT WATCHOUT FOR BUGS
-            receiver = User.query.get(form.data['opponent_id'])
-            if receiver.session_id:
-                socketio.emit('new_game_request', game_request.to_dict(),
-                              room=receiver.session_id)
-        return game_request.to_dict()
+            game_request = Game_Request(
+                user_id=current_user.id, opponent_id=form.data['opponent_id'])
+            db.session.add(game_request)
+            db.session.commit()
+            if form.data['opponent_id']:
+                # ALERT MAY NEED TO BE INT WATCHOUT FOR BUGS
+                receiver = User.query.get(form.data['opponent_id'])
+                if receiver.session_id:
+                    socketio.emit('new_game_request', {'gameRequest': game_request.received_to_dict(), 'requestType': 'received'},
+                                  room=receiver.session_id)
+            return game_request.sent_to_dict()
+        else:
+          return {'errors': ['Cannot create game request with self']}
     else:
         return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 

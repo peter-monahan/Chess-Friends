@@ -4,6 +4,7 @@ import { createMessage, deleteAMessage, getAllMessages, editMessage } from '../.
 import { Link } from "react-router-dom";
 import Message from "./Message";
 import './Chat.css';
+import {deleteView} from '../../../store/view';
 
 function Chat({setDisplay, chat}) {
   const divRef = useRef(null)
@@ -14,12 +15,21 @@ function Chat({setDisplay, chat}) {
   const [errors, setErrors] = useState([]);
   const otherUser = chat.user
 
+  // setView(false)
   function handleClick(e) {
     const targ = e.target;
     if(!(targ.id.includes('chat-bar'))){
       setDisplay(false);
+      dispatch(deleteView())
     }
   }
+
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(deleteView())
+  //   }
+  // }, [])
+
   useEffect(() => {
     document.addEventListener('click', handleClick);
     const  func = async () => {

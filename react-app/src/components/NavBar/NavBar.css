@@ -46,3 +46,8 @@
 .nav-item.active {
   background-color: rgb(52, 50, 47);
 }
+
+.demo-users {
+  margin-top: 15px;
+  border-top: 1px solid rgb(27, 27, 27);
+}

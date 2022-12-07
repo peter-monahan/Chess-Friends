@@ -22,6 +22,7 @@ body {
   background-color: greenyellow;
   display: inline-block;
   margin-bottom: 8px;
+  /* border: 2px solid rgb(0, 186, 0); */
 }
 .active-false {
   display: none;
@@ -30,4 +31,15 @@ body {
 a {
   color: white;
   text-decoration: none;
+}
+
+button {
+  border-radius: 20px;
+  background-color: rgb(98, 93, 89);
+  margin: 2px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  color: white;
+  border: none;
 }

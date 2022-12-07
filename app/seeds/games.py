@@ -10,19 +10,19 @@ def seed_games():
     baylen = User.query.filter(User.username == 'baylen').first()
     zaviar = User.query.filter(User.username == 'zaviar').first()
     james = User.query.filter(User.username == 'james').first()
-    magnus = User.query.filter(User.username == 'magnus').first()
+    blake = User.query.filter(User.username == 'blake').first()
 
     game_data1 = py_chess.Game()
 
 
 
-    game1 = Game(white_id=Demo.id, black_id=magnus.id,
+    game1 = Game(white_id=Demo.id, black_id=blake.id,
                  json_data=json.dumps(game_data1.to_dict()))
-    game2 = Game(white_id=magnus.id, black_id=zaviar.id,
+    game2 = Game(white_id=blake.id, black_id=zaviar.id,
                  json_data=json.dumps(game_data1.to_dict()))
     game3 = Game(white_id=james.id, black_id=baylen.id,
                  json_data=json.dumps(game_data1.to_dict()))
-    game4 = Game(white_id=Demo2.id, black_id=magnus.id,
+    game4 = Game(white_id=Demo2.id, black_id=blake.id,
                  json_data=json.dumps(game_data1.to_dict()))
     game5 = Game(white_id=baylen.id, black_id=Demo.id,
                  json_data=json.dumps(game_data1.to_dict()))

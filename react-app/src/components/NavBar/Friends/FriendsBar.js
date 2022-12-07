@@ -34,10 +34,13 @@ function FriendsBar({setDisplay}) {
       {Object.keys(friendRequests.received).map(key => {
         const request = friendRequests.received[key];
         return (
-          <div key={key} id='friend-bar'>
+          <div key={key} id='friend-bar' className="friend-request">
             {request.sender.username}
+            <div id='friend-bar'>
+
             <button onClick={() => dispatch(acceptFriendRequest(request.id))} id="friend-bar">Accept</button>
             <button onClick={() => dispatch(deleteAFriendRequest(request.id))} id="friend-bar">Decline</button>
+            </div>
           </div>
         )
       })}
@@ -49,7 +52,7 @@ function FriendsBar({setDisplay}) {
       {Object.keys(friendRequests.sent).map(key => {
         const request = friendRequests.sent[key];
         return (
-          <div key={key} id='friend-bar'>
+          <div key={key} id='friend-bar' className="friend-request">
             {request.receiver.username}
             <button onClick={() => dispatch(deleteAFriendRequest(request.id))} id='friend-bar'>Delete</button>
           </div>
@@ -64,8 +67,8 @@ function FriendsBar({setDisplay}) {
         const friend = friends[key];
 
         return (
-          <Link to={`/users/${friend.id}`} key={key}>
-            {friend.username}
+          <Link className="friend-button" to={`/users/${friend.id}`} key={key}>
+            {friend.username}<div className={`active-${friend.active}`}></div>
           </Link>
         )
       })}
@@ -74,7 +77,6 @@ function FriendsBar({setDisplay}) {
 
   return (
     <div className="friend-bar" id="friend-bar">
-      <button>New Friend</button>
       <div id='friend-bar' className="friend-requests">
         Friend Requests
         <div className="friend-sent-received" id="friend-bar">
