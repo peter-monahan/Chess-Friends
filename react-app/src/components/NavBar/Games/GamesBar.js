@@ -84,7 +84,7 @@ function GamesBar({setDisplay}) {
   return (
     <div className="game-bar" id="game-bar">
       <div id='game-bar' className="game-requests">
-        Game Requests
+        Game Invites
         <div className="game-sent-received" id="game-bar">
           <div onClick={(e) => setRequestsType('received')} className={`game-received game-tab ${requestsType === 'received' ? 'active' : ''}`} id="game-bar">Received</div>
           <div onClick={(e) => setRequestsType('sent')} className={`game-sent game-tab ${requestsType === 'sent' ? 'active' : ''}`} id="game-bar">Sent</div>

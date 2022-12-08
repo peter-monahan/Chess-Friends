@@ -85,8 +85,8 @@ function Piece({start, pieceStr, game, selected, setSelected, playerColor, setUp
   }
 
   return (
-    <div id='chess-board' style={styleObj} className='black-pawn'>
-      <img className={`black-pawn-img player-${playerColor}`} onClick={handleClick} id={`chess-board`} src={`/images/${pieceStr.slice(0,pieceStr.length-3)}.png`} alt={pieceStr} ></img>
+    <div id='chess-board' style={styleObj} className='piece'>
+      <img className={`piece-img player-${playerColor}`} onClick={handleClick} id={`chess-board`} src={`/images/${pieceStr.slice(0,pieceStr.length-3)}.png`} alt={pieceStr} ></img>
     </div>
   );
 }

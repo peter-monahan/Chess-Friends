@@ -32,7 +32,9 @@ function Game() {
       }, 600);
     }
     func()
-
+    return () => {
+      clearTimeout(timeout)
+    }
   }, [games, gameId]);
 
   useEffect(() => {
@@ -86,10 +88,10 @@ const upgradePieceSplash = () => {
       <div className='splash-background'>
         <div className='upgrade-piece'>
           <div className='upgrade-pieces'>
-          <img className='black-pawn-img' onClick={() => dispatch(makeAMove(upgrade.gameId, {...upgrade.move, piece: 'knight'}))} id='chess-board' src={`/images/${playerColor},knight.png`} alt='knight' ></img>
-          <img className='black-pawn-img' onClick={() => dispatch(makeAMove(upgrade.gameId, {...upgrade.move, piece: 'rook'}))} id='chess-board' src={`/images/${playerColor},rook.png`} alt='rook' ></img>
-          <img className='black-pawn-img' onClick={() => dispatch(makeAMove(upgrade.gameId, {...upgrade.move, piece: 'bishop'}))} id='chess-board' src={`/images/${playerColor},bishop.png`} alt='bishop' ></img>
-          <img className='black-pawn-img' onClick={() => dispatch(makeAMove(upgrade.gameId, {...upgrade.move, piece: 'queen'}))} id='chess-board' src={`/images/${playerColor},queen.png`} alt='queen' ></img>
+          <img className='piece-img' onClick={() => dispatch(makeAMove(upgrade.gameId, {...upgrade.move, piece: 'knight'}))} id='chess-board' src={`/images/${playerColor},knight.png`} alt='knight' ></img>
+          <img className='piece-img' onClick={() => dispatch(makeAMove(upgrade.gameId, {...upgrade.move, piece: 'rook'}))} id='chess-board' src={`/images/${playerColor},rook.png`} alt='rook' ></img>
+          <img className='piece-img' onClick={() => dispatch(makeAMove(upgrade.gameId, {...upgrade.move, piece: 'bishop'}))} id='chess-board' src={`/images/${playerColor},bishop.png`} alt='bishop' ></img>
+          <img className='piece-img' onClick={() => dispatch(makeAMove(upgrade.gameId, {...upgrade.move, piece: 'queen'}))} id='chess-board' src={`/images/${playerColor},queen.png`} alt='queen' ></img>
           </div>
           <button onClick={() => setUpgrade(null)}>Cancel</button>
         </div>
