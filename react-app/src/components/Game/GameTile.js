@@ -6,7 +6,7 @@ import Piece from './Piece';
 
 
 
-function GameTile({game, row, col, selected, setSelected}) {
+function GameTile({game, row, col, selected, setSelected, setUpgrade}) {
   const liveGame = useSelector(state => state.games[game.id])
   const dispatch = useDispatch()
   const color = ((row+col) % 2) === 0 ? 'white' : 'black';
@@ -33,7 +33,11 @@ function GameTile({game, row, col, selected, setSelected}) {
 
   const handleClick = (e) => {
     if(selected && valid.length) {
-      dispatch(makeAMove(game.id, [selected.coords, [row, col]]))
+      if ((selected.pieceStr.slice(6, 10) === 'pawn') && ((row === 0) || (row === 7))) {
+        setUpgrade({gameId: game.id, move:{ move: [selected.coords, [row, col]]}})
+      } else {
+        dispatch(makeAMove(game.id, { move: [selected.coords, [row, col]]}))
+      }
     }
     setSelected(null);
   }

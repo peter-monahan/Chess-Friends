@@ -48,13 +48,14 @@ def get_game(id):
 def make_move(id):
     user = User.query.get(current_user.id)
     move = request.json
+    print(f'HEEEEEEEEEEEEEEEEEEEEEEEEYYYYYYYYYY {move}')
     game_record = Game.query.get(id)
     if game_record:
         game_data = json.loads(game_record.json_data)
         if game_data['turn'][0] == 'white' and current_user.id == game_record.white_id:
 
             game = py_chess.Game(game=game_data)
-            success = game.move(*move)
+            success = game.move(move)
             if success:
                 if game.checkmate or game.stalemate:
                     game_record.json_data = json.dumps(game.to_dict())
@@ -75,7 +76,7 @@ def make_move(id):
                 return {'errors': ['Not a valid move']}, 400
         elif game_data['turn'][0] == 'black' and current_user.id == game_record.black_id:
             game = py_chess.Game(game=game_data)
-            success = game.move(*move)
+            success = game.move(move)
             if success:
                 if game.checkmate or game.stalemate:
                     game_record.json_data = json.dumps(game.to_dict())

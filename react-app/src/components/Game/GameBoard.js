@@ -6,7 +6,7 @@ import Piece from './Piece';
 import GameTile from './GameTile';
 
 
-function GameBoard({game, playerColor}) {
+function GameBoard({game, playerColor, setUpgrade}) {
   // const dispatch = useDispatch()
   const [selected, setSelected] = useState(null)
   const tiles = [];
@@ -16,11 +16,11 @@ function GameBoard({game, playerColor}) {
       const pieceStr = game.data.board[row][col]
       if(pieceStr) {
         pieces.push(
-          <Piece key={`${row},${col}`} start={[row, col]} pieceStr={pieceStr} game={game} selected={selected} setSelected={setSelected} playerColor={playerColor} />
+          <Piece key={`${row},${col}`} setUpgrade={setUpgrade} start={[row, col]} pieceStr={pieceStr} game={game} selected={selected} setSelected={setSelected} playerColor={playerColor} />
         )
       }
       tiles.push(
-        <GameTile key={`${row},${col}`} selected={selected} setSelected={setSelected} game={game} row={row} col={col} />
+        <GameTile setUpgrade={setUpgrade} key={`${row},${col}`} selected={selected} setSelected={setSelected} game={game} row={row} col={col} />
       )
     }
   }

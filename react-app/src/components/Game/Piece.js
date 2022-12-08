@@ -25,7 +25,9 @@ function getPosition(start) {
   return {bottom, left}
 }
 
-function Piece({start, pieceStr, game, selected, setSelected, playerColor}) {
+
+
+function Piece({start, pieceStr, game, selected, setSelected, playerColor, setUpgrade}) {
   const dispatch = useDispatch()
   const liveGame = useSelector(state => state.games[game.id])
   const color = pieceStr.slice(0,5)
@@ -62,7 +64,13 @@ function Piece({start, pieceStr, game, selected, setSelected, playerColor}) {
     if(owned && color === liveGame.data.turn[0]) {
       setSelected({pieceStr, color, coords: piece.curr_coords})
     } else if(!owned && selected && valid.length) {
-      dispatch(makeAMove(game.id, [selected.coords, piece.curr_coords]))
+      const [row, col] = piece.curr_coords;
+      if ((selected.pieceStr.slice(6, 10) === 'pawn') && ((row === 0) || (row === 7))) {
+        setUpgrade({gameId: game.id, move:{ move: [selected.coords, piece.curr_coords]}})
+      } else {
+        dispatch(makeAMove(game.id, { move: [selected.coords, piece.curr_coords]}))
+      }
+      // dispatch(makeAMove(game.id, [selected.coords, piece.curr_coords]))
       setSelected(null)
     } else if(selected) {
       setSelected(null)
@@ -78,7 +86,7 @@ function Piece({start, pieceStr, game, selected, setSelected, playerColor}) {
 
   return (
     <div id='chess-board' style={styleObj} className='black-pawn'>
-      <img className={`black-pawn-img player-${playerColor}`} onClick={handleClick} id={`chess-board`} src={`/images/${pieceStr.slice(0,pieceStr.length-3)}.png`} ></img>
+      <img className={`black-pawn-img player-${playerColor}`} onClick={handleClick} id={`chess-board`} src={`/images/${pieceStr.slice(0,pieceStr.length-3)}.png`} alt={pieceStr} ></img>
     </div>
   );
 }
