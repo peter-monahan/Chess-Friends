@@ -18,7 +18,7 @@ class Piece:
       'valid_moves': self.valid_moves
     }
 
-  def move(self, new_coords):
+  def move(self, new_coords, piece=None):
     [curr_row, curr_col] = self.curr_coords
     [new_row, new_col] = new_coords
     old_piece = self.game.board[new_row][new_col]
@@ -31,7 +31,6 @@ class Piece:
     self.game.board[new_row][new_col] = self.id
     self.curr_coords = new_coords
     self.times_moved += 1
-    self.game.update()
     return False
 
 
@@ -156,7 +155,7 @@ class Pawn(ShortRangePiece):
     }
 
 
-  def move(self, new_coordinates):
+  def move(self, new_coordinates, piece=None):
     upgrade_bool = False
     [curr_row, curr_col] = self.curr_coords
     [new_row, new_col] = new_coordinates
@@ -189,7 +188,6 @@ class Pawn(ShortRangePiece):
     elif self.color == 'black' and self.curr_coords[0] == 7:
       upgrade_bool = True
 
-    self.game.update()
     return upgrade_bool
 
 
@@ -296,7 +294,7 @@ class King(ShortRangePiece):
       'castle_move': self.castle_move
     }
 
-  def move(self, new_coordinates):
+  def move(self, new_coordinates, piece=None):
     [curr_row, curr_col] = self.curr_coords
     [new_row, new_col] = new_coordinates
     old_piece = self.game.board[new_row][new_col]
@@ -322,7 +320,7 @@ class King(ShortRangePiece):
     self.game.board[new_row][new_col] = self.id
     self.curr_coords = new_coordinates
     self.times_moved += 1
-    self.game.update()
+
     return False
 
 

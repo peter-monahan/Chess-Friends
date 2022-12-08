@@ -92,9 +92,11 @@ class Game:
     'winner': self.winner
     }
 
-  def move(self, old_coords, new_coords):
+  def move(self, move):
     if self.checkmate or self.stalemate or self.forfeit:
       return False
+
+    [old_coords, new_coords] = move['move']
     id = self.board[old_coords[0]][old_coords[1]]
     if id[:5] != self.turn[0]:
       return False
@@ -102,8 +104,26 @@ class Game:
     piece = self.pieces[self.turn[0]][id]
 
     if new_coords in piece.valid_moves:
-      piece.move(new_coords)
+      piece.move(new_coords, piece=piece)
+      if move.get('piece'):
+        new_id = f'{self.turn[0]},{move.get("piece")},{str(self.next_id)}'
+        self.next_id += 1
+        data = {
+          'id': new_id,
+          'color': self.turn[0],
+          'curr_coords': new_coords,
+          'times_moved': 0,
+          'valid_moves': []
+        }
+        self.pieces[self.turn[0]][new_id] = pieces_obj[move.get("piece")[:4]](self, data)
+        del self.pieces[self.turn[0]][id]
+        self.board[new_coords[0]][new_coords[1]] = new_id
+
+
+
       self.history.append([old_coords, new_coords])
+
+      self.update()
       return True
     else:
       return False
