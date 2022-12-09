@@ -31,7 +31,7 @@ pipenv install --dev -r dev-requirements.txt && pipenv install -r requirements.t
 3. Create a `.env` file based on the example provided
 
 
-4. Active your pipenv then run the following command to open shell
+4. Run the following command to open the pipenv shell
 ```
 pipenv shell
 ```
