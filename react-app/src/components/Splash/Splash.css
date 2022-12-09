@@ -22,3 +22,24 @@ flex-direction: column;
 align-items: center;
 justify-content: flex-start;
 }
+
+.about-links {
+  display: flex;
+  column-gap: 10px;
+  border: 1px solid gray;
+  border-radius: 30px;
+  height: 30px;
+  width: 80px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 5px;
+  margin-bottom: 10px;
+}
+
+.about-area {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 10px;
+}

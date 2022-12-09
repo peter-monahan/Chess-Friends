@@ -43,3 +43,9 @@ button {
   color: white;
   border: none;
 }
+
+button:disabled {
+  background-color: rgb(132, 124, 118);
+  color: rgb(185, 185, 185);
+  cursor: default;
+}
