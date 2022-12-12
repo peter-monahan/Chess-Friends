@@ -86,7 +86,6 @@ export const forfeiteGame = (gameId) => async (dispatch) => {
 
 
 export const makeAMove = (gameId, move) => async (dispatch) => {
-  console.log(move)
   const res = await myFetch(`/api/games/${gameId}`, {
     method: 'PUT',
     body: JSON.stringify(move)
@@ -97,7 +96,6 @@ export const makeAMove = (gameId, move) => async (dispatch) => {
     dispatch(addGame(game));
   } else {
     const response = res.json()
-    console.log(response)
   }
 };
 

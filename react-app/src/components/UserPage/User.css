@@ -12,3 +12,17 @@
   /* border-radius:50%; */
   background-color: rgb(142, 142, 142);
 }
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 3px;
+  margin-left: 4px;
+}
+
+.list-user {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 4px;
+  width: 100px;
+}

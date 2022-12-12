@@ -4,7 +4,7 @@ import { getAUser } from '../../store/users';
 import { useParams, useHistory } from 'react-router-dom';
 import {createFriendRequest, deleteAFriendRequest} from '../../store/friendRequests';
 import {createGameRequest, deleteAGameRequest} from '../../store/gameRequests';
-import {createChat} from '../../store/chats';
+import {createChat, getAllChats} from '../../store/chats';
 import {setView} from '../../store/view';
 import './User.css'
 import { acceptFriendRequest, deleteAFriend } from '../../store/friends';
@@ -44,7 +44,7 @@ function User() {
       }
       </div>
       <div>
-        <button onClick={() => {dispatch(createChat(userId)); dispatch(setView(Number(userId)))}}>Send Direct Message</button>
+        <button onClick={() => dispatch(getAllChats()).then((chats) => Object.keys(chats).some(key => chats[key].other_user_id === Number(userId)) ? true :  dispatch(createChat(userId))).then(() => dispatch(setView(Number(userId))))}>Send Direct Message</button>
       </div>
    </div>
   )

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { useParams, Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {forfeiteGame, getAGame, makeAMove} from '../../store/games';
 import GameBoard from './GameBoard';
@@ -14,6 +14,7 @@ function Game() {
   const [winner, setWinner] = useState(false);
   const [playerColor, enemyColor] = game?.opponent.id === game?.white_id ? ['black', 'white'] : ['white', 'black'];
   const [upgrade, setUpgrade] = useState(null);
+
 
   const sessionUser = useSelector(state => state.session.user);
 
@@ -119,6 +120,8 @@ const upgradePieceSplash = () => {
         </div>
       </div>
     );
+  } else if(gameOver) {
+    return <Redirect to='/' />
   } else {
     return null;
   }
