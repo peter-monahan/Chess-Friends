@@ -41,8 +41,9 @@ export const getAllChats = () => async (dispatch) => {
   if (res.ok) {
     const chats = await res.json();
     dispatch(getChats(chats));
+    return chats
   }
-  return res;
+
 };
 
 //CREATE Comment
