@@ -14,9 +14,10 @@ import { io } from 'socket.io-client';
 import {addChat} from './store/chats';
 import {addMessage, deleteMessage} from './store/messages';
 import {addFriend} from './store/friends';
-import {deleteFriendRequest} from './store/friendRequests';
+import {addFriendRequest, deleteFriendRequest} from './store/friendRequests';
 import {addGame} from './store/games';
 import {deleteGameRequest, addGameRequest} from './store/gameRequests';
+import { getAUser } from './store/users';
 
 let socket;
 
@@ -36,12 +37,12 @@ function App() {
     if(user) {
       socket = io()
 
-      socket.on("connect", () => {
-        console.log('Connected')
-      });
-      socket.on("disconnect", () => {
-        console.log('Disconnected')
-      });
+      // socket.on("connect", () => {
+      //   console.log('Connected')
+      // });
+      // socket.on("disconnect", () => {
+      //   console.log('Disconnected')
+      // });
       socket.on('new_chat', (chat) => {
         dispatch(addChat(chat))
       });
@@ -57,20 +58,45 @@ function App() {
       socket.on('new_friend', ({friend, requestId}) => {
         dispatch(addFriend(friend));
         dispatch(deleteFriendRequest(requestId, 'sent'))
+        dispatch(getAUser(friend.id))
       });
       socket.on('new_game', ({game, requestId}) => {
         dispatch(addGame(game));
         dispatch(deleteGameRequest(requestId, 'sent'))
+        dispatch(getAUser(game.black_id))
+
       });
       socket.on('update_game', (game) => {
         dispatch(addGame(game));
       });
       socket.on('new_game_request', ({gameRequest, requestType}) => {
         dispatch(addGameRequest(gameRequest, requestType));
+        dispatch(getAUser(gameRequest.user_id))
       });
-      socket.onAny((message, ...args) => {
-        console.log(message, args)
+      socket.on('new_friend_request', ({friendRequest, requestType}) => {
+        dispatch(addFriendRequest(friendRequest, requestType));
+        dispatch(getAUser(friendRequest.sender_id))
+
+      });
+      socket.on('delete_friend_request', ({request, requestType}) => {
+        dispatch(deleteFriendRequest(request.id, requestType));
+        if(requestType === 'sent'){
+          dispatch(getAUser(request.receiver_id))
+        } else if(requestType === 'received'){
+          dispatch(getAUser(request.sender_id))
+        }
       })
+      socket.on('delete_game_request', ({request, requestType}) => {
+        dispatch(deleteGameRequest(request.id, requestType));
+        if(requestType === 'sent'){
+          dispatch(getAUser(request.opponent_id))
+        } else if(requestType === 'received'){
+          dispatch(getAUser(request.user_id))
+        }
+      })
+      // socket.onAny((message, ...args) => {
+      //   console.log(message, ...args)
+      // })
     } else if(socket) {
       socket.disconnect()
     }

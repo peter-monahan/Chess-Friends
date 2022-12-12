@@ -97,3 +97,33 @@ transform: translateY(1px);
 
   border-radius: 10px;
 }
+
+.game-options-container {
+  position:relative;
+  top: 50%;
+  height: 0;
+  /* width: 0; */
+  overflow: visible;
+}
+
+.game-options {
+  background-color: rgb(158, 156, 153);
+  border-radius: 10px;
+  position:relative;
+  top:-25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  /* padding: 10px; */
+  height: 40px;
+  width: 200px;
+  /* width: 0px; */
+  z-index: 5;
+  cursor: default;
+}
+
+.new-game-button {
+  min-width: 100px;
+  padding: 0;
+}

@@ -54,14 +54,26 @@ def create_friend_request():
   form = FriendRequestForm()
   if form.validate_on_submit:
     if current_user.id != form.data['receiver_id']:
+      received = Friend_Request.query.filter(Friend_Request.sender_id == form.data['receiver_id'],
+                              Friend_Request.receiver_id == current_user.id).first()
+      if received:
+        received.receiver.befriend(received.sender)
+        db.session.delete(received)
+        db.session.commit()
+        if received.sender.session_id:
+          socketio.emit('new_friend', {'friend': received.receiver.to_dict(), 'requestId': received.id},
+                        room=received.sender.session_id)
+        socketio.emit('new_friend', {'friend': received.sender.to_dict(), 'requestId': received.id},
+                        room=received.receiver.session_id)
+        return {'errors': ['User had already sent you a friend request. Request has been accepted']}, 400
       receiver = User.query.get(form.data['receiver_id']) # ALERT MAY NEED TO BE INT WATCHOUT FOR BUGS
       friend_request = Friend_Request(sender_id=current_user.id, receiver_id=form.data['receiver_id'])
       db.session.add(friend_request)
       db.session.commit()
       if receiver.session_id:
-        socketio.emit('new_friend_request', friend_request.to_dict(),
+        socketio.emit('new_friend_request', {'friendRequest': friend_request.received_to_dict(), 'requestType': 'received'},
                     room=receiver.session_id)
-      return friend_request.to_dict()
+      return friend_request.sent_to_dict()
     else:
       return {'errors': ['Cannot send friend request to self']}
   else:
