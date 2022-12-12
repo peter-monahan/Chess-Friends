@@ -48,7 +48,6 @@ def get_game(id):
 def make_move(id):
     user = User.query.get(current_user.id)
     move = request.json
-    print(f'HEEEEEEEEEEEEEEEEEEEEEEEEYYYYYYYYYY {move}')
     game_record = Game.query.get(id)
     if game_record:
         game_data = json.loads(game_record.json_data)

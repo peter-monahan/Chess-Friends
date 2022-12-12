@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import {getAllFriendRequests, deleteAFriendRequest} from '../../../store/friendRequests'
 import {getAllFriends, acceptFriendRequest} from '../../../store/friends';
+import { getAUser } from "../../../store/users";
 import './FriendsBar.css';
 
 function FriendsBar({setDisplay}) {
@@ -38,8 +39,8 @@ function FriendsBar({setDisplay}) {
             {request.sender.username}
             <div id='friend-bar'>
 
-            <button onClick={() => dispatch(acceptFriendRequest(request.id))} id="friend-bar">Accept</button>
-            <button onClick={() => dispatch(deleteAFriendRequest(request.id))} id="friend-bar">Decline</button>
+            <button onClick={() => dispatch(acceptFriendRequest(request.id)).then(() => dispatch(getAUser(request.sender_id)))} id="friend-bar">Accept</button>
+            <button onClick={() => dispatch(deleteAFriendRequest(request.id)).then(() => dispatch(getAUser(request.sender_id)))} id="friend-bar">Decline</button>
             </div>
           </div>
         )
@@ -54,7 +55,7 @@ function FriendsBar({setDisplay}) {
         return (
           <div key={key} id='friend-bar' className="friend-request">
             {request.receiver.username}
-            <button onClick={() => dispatch(deleteAFriendRequest(request.id))} id='friend-bar'>Delete</button>
+            <button onClick={() => dispatch(deleteAFriendRequest(request.id)).then(() => dispatch(getAUser(request.receiver_id)))} id='friend-bar'>Delete</button>
           </div>
         )
       })}

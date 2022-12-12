@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from "react-router-dom";
 import {getAllGameRequests, deleteAGameRequest} from '../../../store/gameRequests'
 import {getAllGames, acceptGameRequest} from '../../../store/games';
+import {getAllFriends} from '../../../store/friends';
 import './GamesBar.css';
+import { getAUser } from "../../../store/users";
 
 function GamesBar({setDisplay}) {
   const dispatch = useDispatch();
@@ -11,6 +13,8 @@ function GamesBar({setDisplay}) {
   const [requestsType, setRequestsType] = useState('received');
   const gameRequests = useSelector(state => state.gameRequests);
   const games = useSelector(state => state.games);
+  const [showFriends, setShowFriends] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
   const sessionUser = useSelector(state => state.session.user);
 
   function handleClick(e) {
@@ -24,6 +28,8 @@ function GamesBar({setDisplay}) {
     const id = await dispatch(acceptGameRequest(requestId))
     history.replace(`/games/${id}`);
   }
+
+
   useEffect(() => {
     document.addEventListener('click', handleClick);
     dispatch(getAllGames())
@@ -34,6 +40,7 @@ function GamesBar({setDisplay}) {
     }
   }, [])
 
+
   const ReceivedRequests = () => (
     <>
       {Object.keys(gameRequests.received).map(key => {
@@ -42,8 +49,8 @@ function GamesBar({setDisplay}) {
           <div key={key} id='game-bar' className="game-request">
             {request.sender.username}
             <div id='game-bar'>
-            <button onClick={() => acceptButton(request.id)}>Accept</button>
-            <button onClick={() => dispatch(deleteAGameRequest(request.id))} id="game-bar">Decline</button>
+            <button onClick={() => acceptButton(request.id).then(() => dispatch(getAUser(request.user_id)))}>Accept</button>
+            <button onClick={() => dispatch(deleteAGameRequest(request.id)).then(() => dispatch(getAUser(request.user_id)))} id="game-bar">Decline</button>
             </div>
           </div>
         )
@@ -58,7 +65,7 @@ function GamesBar({setDisplay}) {
         return (
           <div key={key} id='game-bar' className="game-request">
             {request.receiver.username}
-            <button onClick={() => dispatch(deleteAGameRequest(request.id))} id='game-bar'>Delete</button>
+            <button onClick={() => dispatch(deleteAGameRequest(request.id)).then(() => dispatch(getAUser(request.opponent_id)))} id='game-bar'>Delete</button>
           </div>
         )
       })}
@@ -81,8 +88,47 @@ function GamesBar({setDisplay}) {
     </>
   )
 
+  const optionsClick = (e) => {
+    setShowOptions(false);
+  }
+  const friendsClick = e => {
+    setShowFriends(false);
+  }
+  useEffect(() => {
+    if(showOptions) {
+      document.addEventListener('click', optionsClick);
+
+      return () => {
+        document.removeEventListener('click', optionsClick)
+      }
+    }
+    if(showFriends) {
+      document.addEventListener('click', friendsClick);
+
+      return () => {
+        document.removeEventListener('click', friendsClick)
+      }
+    }
+
+  }, [showOptions, showFriends])
+
+  const newGameClick = () => {
+    setShowOptions(true);
+  }
+
+
+
+  const newGameButton = (
+    <button id='game-bar' className="new-game-button" onClick={newGameClick}>
+      New Game
+      {showOptions && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><button id="game-bar" onClick={() => {setShowFriends(true); dispatch(getAllFriends())}}>With a Friend</button><button id="game-bar" onClick={() => {}}>Random Player</button></div></div>}
+      {showFriends && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options">friends</div></div>}
+    </button>
+  )
+
   return (
     <div className="game-bar" id="game-bar">
+      {false && newGameButton}
       <div id='game-bar' className="game-requests">
         Game Invites
         <div className="game-sent-received" id="game-bar">
