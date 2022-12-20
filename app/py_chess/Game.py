@@ -2,38 +2,58 @@ from .Pieces import pieces_obj
 from .default_state import default
 
 class Game:
-  def __init__(self, game=None):
-    data = None
-    if game :
-      data = game
+  def __init__(self, game=None, prev_state=None):
+    if prev_state:
+      self.board = prev_state.board
+      self.pieces = {
+        'white': {id: pieces_obj[id[6:10]](self, prev_state['pieces']['white'][id]) for id in prev_state['pieces']['white']},
+        'black': {id: pieces_obj[id[6:10]](self, prev_state['pieces']['black'][id]) for id in prev_state['pieces']['black']}
+      }
+      self.kings = {
+        'white': self.pieces['white']['white,king,00'],
+        'black': self.pieces['black']['black,king,00']
+      }
+      self.opponent_line_of_sight = []
+      self.checks = []
+      self.pinned_pieces = {}
+      self.valid_moves = prev_state['valid_moves']
+      self.turn = prev_state['turn']
+      self.next_id = prev_state['next_id']
+      self.history = []
+      self.forfeit = prev_state['forfeit']
+      self.winner = prev_state['winner']
+      self.checkmate = False
+      self.stalemate = False
     else:
-      data = default
+      if game :
+        data = game
+      else:
+        data = default
 
 
 
-    # self.pieces_obj = pieces_obj
+      # self.pieces_obj = pieces_obj
 
-    self.board = data['board']
-    self.pieces = {
-      'white': {id: pieces_obj[id[6:10]](self, data['pieces']['white'][id]) for id in data['pieces']['white']},
-      'black': {id: pieces_obj[id[6:10]](self, data['pieces']['black'][id]) for id in data['pieces']['black']}
-    }
-    self.kings = {
-      'white': self.pieces['white']['white,king,00'],
-      'black': self.pieces['black']['black,king,00']
-    }
-    self.opponent_line_of_sight = []
-    self.checks = []
-    self.pinned_pieces = {}
-    self.valid_moves = []
-    self.turn = data['turn']
-    self.next_id = data['next_id']
-    self.history = data['history']
-    self.forfeit = data['forfeit']
-    self.winner = data['winner']
-    self.checkmate = False
-    self.stalemate = False
-
+      self.board = data['board']
+      self.pieces = {
+        'white': {id: pieces_obj[id[6:10]](self, data['pieces']['white'][id]) for id in data['pieces']['white']},
+        'black': {id: pieces_obj[id[6:10]](self, data['pieces']['black'][id]) for id in data['pieces']['black']}
+      }
+      self.kings = {
+        'white': self.pieces['white']['white,king,00'],
+        'black': self.pieces['black']['black,king,00']
+      }
+      self.opponent_line_of_sight = []
+      self.checks = []
+      self.pinned_pieces = {}
+      self.valid_moves = data['valid_moves']
+      self.turn = data['turn']
+      self.next_id = data['next_id']
+      self.history = data['history']
+      self.forfeit = data['forfeit']
+      self.winner = data['winner']
+      self.checkmate = False
+      self.stalemate = False
 
 
     # self.black_king = self.black_pieces['black,king']
@@ -48,7 +68,7 @@ class Game:
     [self.turn[0], self.turn[1]] = [self.turn[1], self.turn[0]]
     self.checks = []
     self.opponent_line_of_sight = []
-    self.valid_moves = []
+    self.valid_moves = {}
 
     king = self.kings[self.turn[0]]
     enemy_pieces = self.pieces[self.turn[1]]
@@ -75,21 +95,21 @@ class Game:
       else:
         self.stalemate = True
 
-  def to_dict(self):
+  def to_passable_dict(self):
     return {
-    'board': self.board,
+    'board': [[square for square in row] for row in self.board],
     'pieces': {
       'black': {self.pieces['black'][key].id: self.pieces['black'][key].to_dict() for key in self.pieces['black']},
       'white': {self.pieces['white'][key].id: self.pieces['white'][key].to_dict() for key in self.pieces['white']},
     },
-    'turn': self.turn,
+    'turn': [*self.turn],
     'next_id': self.next_id,
     'stalemate': self.stalemate,
     'checkmate': self.checkmate,
     'checks': self.checks,
-    'history': self.history,
     'forfeit': self.forfeit,
-    'winner': self.winner
+    'winner': self.winner,
+    'valid_moves': self.valid_moves
     }
 
   def move(self, move):
@@ -137,6 +157,38 @@ class Game:
       self.winner = 'black'
     else :
       raise ValueError("color must be either 'black' or 'white'")
+
+  def evaluate_score(self):
+    white_score = 0
+    black_score = 0
+
+    for pieceKey in self.pieces['white']:
+      white_score += self.pieces['white'][pieceKey].get_value()
+
+    for pieceKey in self.pieces['black']:
+      black_score -= self.pieces['black'][pieceKey].get_value()
+
+    return white_score + black_score
+
+
+  def to_dict(self):
+    return {
+    'board': self.board,
+    'pieces': {
+      'black': {self.pieces['black'][key].id: self.pieces['black'][key].to_dict() for key in self.pieces['black']},
+      'white': {self.pieces['white'][key].id: self.pieces['white'][key].to_dict() for key in self.pieces['white']},
+    },
+    'turn': self.turn,
+    'next_id': self.next_id,
+    'stalemate': self.stalemate,
+    'checkmate': self.checkmate,
+    'checks': self.checks,
+    'history': self.history,
+    'forfeit': self.forfeit,
+    'winner': self.winner,
+    'valid_moves': self.valid_moves,
+    'score': self.evaluate_score()
+    }
   # def select(self, coordStr):
   #   [row, col] = coordStr.split(',')
 

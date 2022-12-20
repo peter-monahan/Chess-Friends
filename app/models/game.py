@@ -2,7 +2,7 @@ from .db import db
 from datetime import datetime
 import json
 
-class Game(db.Model):  # type: ignore
+class Game(db.Model):
   __tablename__ = 'games'
   id = db.Column(db.Integer, primary_key=True)
   white_id = db.Column(db.Integer, db.ForeignKey('users.id'))

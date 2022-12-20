@@ -3,11 +3,25 @@ class Piece:
     self.game = game
     self.color = data['color']
     # self.start_coords = start_coords
-    self.curr_coords = data['curr_coords']
+    self._curr_coords = data['curr_coords']
+    self.curr_coords_str = ','.join([str(num) for num in data['curr_coords']])
     self.times_moved = data['times_moved']
     self.valid_moves = data['valid_moves']
     self.id = data['id']
 
+  base_val = 0
+
+  @property
+  def curr_coords(self):
+    return self._curr_coords
+
+  @curr_coords.setter
+  def curr_coords(self, coords):
+    self._curr_coords = coords
+    self.curr_coords_str = ','.join([str(num) for num in coords])
+
+  def get_value(self):
+    return self.base_val
 
   def to_dict(self):
     return {
@@ -54,11 +68,12 @@ class Piece:
           res = [square for square in res if square in valid]
 
 
-    if self.game.pinned_pieces.get(','.join([str(num) for num in self.curr_coords])):
-      res = [square for square in res if square in self.game.pinned_pieces[','.join([str(num) for num in self.curr_coords])]]
+    if self.game.pinned_pieces.get(self.curr_coords_str):
+      res = [square for square in res if square in self.game.pinned_pieces[self.curr_coords_str]]
 
     self.valid_moves = res
-    self.game.valid_moves.extend(res)
+    if res:
+      self.game.valid_moves[self.curr_coords_str] = res
     return res
 
 
@@ -141,6 +156,7 @@ class Pawn(ShortRangePiece):
     elif self.color == 'white':
       self.pairs = [[-1, -1], [-1, 1]]
 
+  base_val = 10
 
   def to_dict(self):
     return {
@@ -237,39 +253,45 @@ class Pawn(ShortRangePiece):
         res = [square for square in res if square in valid]
 
 
-    if self.game.pinned_pieces.get(','.join([str(num) for num in self.curr_coords])):
-      res = [square for square in res if square in self.game.pinned_pieces[','.join([str(num) for num in self.curr_coords])]]
+    if self.game.pinned_pieces.get(self.curr_coords_str):
+      res = [square for square in res if square in self.game.pinned_pieces[self.curr_coords_str]]
 
 
     self.valid_moves = res
-    self.game.valid_moves.extend(res)
+    if res:
+      self.game.valid_moves[self.curr_coords_str] = res
     return res
 
 class Rook(LongRangePiece):
   def __init__(self, game, data):
     super().__init__(game, data)
 
-    self.directions = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+  directions = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+  base_val = 50
+
 
 class Knight(ShortRangePiece):
   def __init__(self, game, data):
     super().__init__(game, data)
 
-    self.pairs = [[-2, -1], [-2, 1], [-1, -2], [1, -2], [-1, 2], [1, 2], [2, -1], [2, 1]]
+  pairs = [[-2, -1], [-2, 1], [-1, -2], [1, -2], [-1, 2], [1, 2], [2, -1], [2, 1]]
+  base_val = 30
 
 
 class Bishop(LongRangePiece):
   def __init__(self, game, data):
     super().__init__(game, data)
 
-    self.directions = [[1,-1], [1, 1], [-1, -1], [-1, 1]]
+  directions = [[1,-1], [1, 1], [-1, -1], [-1, 1]]
+  base_val = 30
 
 
 class Queen(LongRangePiece):
   def __init__(self, game, data):
     super().__init__(game, data)
 
-    self.directions = [[-1, 0], [1, 0], [0, -1], [0, 1], [1,-1], [1, 1], [-1, -1], [-1, 1]]
+  directions = [[-1, 0], [1, 0], [0, -1], [0, 1], [1,-1], [1, 1], [-1, -1], [-1, 1]]
+  base_val = 90
 
 
 class King(ShortRangePiece):
@@ -277,11 +299,12 @@ class King(ShortRangePiece):
     super().__init__(game, data)
 
     self.castle_move = data['castle_move']
-    if self.color == 'white':
-      self.game.white_king = self
-    else:
-      self.game.black_king = self
-    self.pairs = [[1,-1], [1, 1], [-1, -1], [-1, 1], [-1, 0], [1, 0], [0, -1], [0, 1]]
+    # if self.color == 'white':
+    #   self.game.white_king = self
+    # else:
+    #   self.game.black_king = self
+  pairs = [[1,-1], [1, 1], [-1, -1], [-1, 1], [-1, 0], [1, 0], [0, -1], [0, 1]]
+  base_val = 900
 
 
   def to_dict(self):
@@ -363,7 +386,8 @@ class King(ShortRangePiece):
 
 
     self.valid_moves = res
-    self.game.valid_moves.extend(res)
+    if res:
+      self.game.valid_moves[self.curr_coords_str] = res
     return res
 
 
@@ -391,7 +415,7 @@ class King(ShortRangePiece):
 
 
         if (len(pieces) == 2) and (pieces[0][:5] == self.color) and (pieces[1][:5] != self.color) and (pieces[1][6:10] in threats):
-          res[','.join([str(num) for num in self.game.pieces[self.color][pieces[0]].curr_coords])] = pinnedMoves
+          res[self.game.pieces[self.color][pieces[0]].curr_coords_str] = pinnedMoves
 
     return res
 
