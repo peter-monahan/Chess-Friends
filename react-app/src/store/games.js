@@ -111,7 +111,6 @@ export const forfeiteGame = (gameId) => async (dispatch) => {
 
 
 export const makeAMove = (gameId, move) => async (dispatch) => {
-  console.log(move)
   dispatch(movePiece(gameId, move))
   if (move.piece){
     await setTimeout(() => true, 400)

@@ -61,7 +61,7 @@ def make_move(id):
                 other_player = game_record.black_player
         elif game_data['turn'][0] == 'black' and current_user.id == game_record.black_id:
             if game_record.white_id <= 0:
-                other_player = py_chess.bots_profiles[game_record.white_id]
+                other_player = py_chess.bots_profiles[(-game_record.white_id)-1]
             else:
                 other_player = game_record.white_player
         else:
@@ -191,7 +191,7 @@ def create_game_request():
     form = GameRequestForm()
     if form.validate_on_submit:
         if current_user.id != form.data['opponent_id']:
-            if form.data['opponent_id'] <= 0:
+            if form.data['opponent_id'] < 0:
                 user = User.query.get(current_user.id)
                 players = [form.data['opponent_id'], current_user.id]
                 random.shuffle(players)
@@ -214,6 +214,8 @@ def create_game_request():
                 socketio.emit('update_game', game.to_dict_with_opponent(current_user.id),
                               room=user.session_id)
                 return game.to_dict_with_opponent(current_user.id)
+            elif form.data['opponent_id'] == 0:
+              pass
             game_request = Game_Request(
                 user_id=current_user.id, opponent_id=form.data['opponent_id'])
             db.session.add(game_request)

@@ -13,7 +13,7 @@ import { authenticate } from './store/session';
 import { io } from 'socket.io-client';
 import {addChat} from './store/chats';
 import {addMessage, deleteMessage} from './store/messages';
-import {addFriend} from './store/friends';
+import {addFriend, deleteFriend} from './store/friends';
 import {addFriendRequest, deleteFriendRequest} from './store/friendRequests';
 import {addGame} from './store/games';
 import {deleteGameRequest, addGameRequest} from './store/gameRequests';
@@ -59,6 +59,10 @@ function App() {
       socket.on('new_friend', ({friend, requestId}) => {
         dispatch(addFriend(friend));
         dispatch(deleteFriendRequest(requestId, 'sent'))
+        dispatch(getAUser(friend.id))
+      });
+      socket.on('delete_friend', (friend) => {
+        dispatch(deleteFriend(friend.id));
         dispatch(getAUser(friend.id))
       });
       socket.on('new_game', ({game, requestId}) => {

@@ -96,8 +96,8 @@ function GamesBar({setDisplay}) {
       {Object.keys(friends).map(key => {
         const friend = friends[key];
         return (
-          <button disabled={Object.keys(gameRequests.sent).some(key => gameRequests.sent[key].opponent_id === friend.id)} id="game-bar" onClick={(e) => {dispatch(createGameRequest(friend.id)); setShowFriends(false); e.stopPropagation();}} key={key}>
-            {friend.username}
+          <button disabled={Object.keys(gameRequests.sent).some(key => gameRequests.sent[key].opponent_id === friend.id) || Object.keys(gameRequests.received).some(key => gameRequests.received[key].user_id === friend.id)} id="game-bar" onClick={(e) => {dispatch(createGameRequest(friend.id)); setShowFriends(false); setRequestsType('sent'); e.stopPropagation();}} key={key}>
+            {friend.username}<div id="game-bar" className={`active-${friend.active}`}></div>
           </button>
         )
       })}
@@ -156,7 +156,7 @@ function GamesBar({setDisplay}) {
   const newGameButton = (
     <button id='game-bar' className="new-game-button" onClick={newGameClick}>
       New Game
-      {showOptions && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><button id="game-bar" onClick={() => {setShowFriends(true); dispatch(getAllFriends())}}>With a Friend</button><button id="game-bar" onClick={() => dispatch(createGameRequest(0))}>Random Player</button><button id="game-bar" onClick={() => setShowBots(true)}>With a Bot</button></div></div>}
+      {showOptions && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><button id="game-bar" onClick={() => {setShowFriends(true); dispatch(getAllFriends())}}>With a Friend</button>{/*<button id="game-bar" onClick={() => dispatch(createGameRequest(0))}>Random Player</button>*/}<button id="game-bar" onClick={() => setShowBots(true)}>With a Bot</button></div></div>}
       {showFriends && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><Friends /></div></div>}
       {showBots && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><Bots /></div></div>}
     </button>

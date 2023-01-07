@@ -159,3 +159,25 @@ width: 62.5px;
   align-items: center;
   width: min-content;
 } */
+
+.game-over-x-button-div {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 95%;
+}
+
+.game-over-x-button {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgb(98, 93, 89);
+  margin: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  cursor: pointer;
+  color: white;
+  border: none;
+}
