@@ -21,7 +21,7 @@ function GameTile({game, row, col, selected, setSelected, setUpgrade}) {
       setValid('tile-valid valid')
     } else if (selected && liveGame.data.pieces[selected.color][selected.pieceStr].curr_coords.join(',') === `${row},${col}`) {
       setValid('tile-selected')
-    } else if( mostRecent && mostRecent.some(coord => coord.join(',') === `${row},${col}`)) {
+    } else if( (mostRecent && mostRecent.some(coord => coord.join(',') === `${row},${col}`) || ((!mostRecent && game.data.history[game.data.history.length-1]) && game.data.history[game.data.history.length-1].some(coord => coord.join(',') === `${row},${col}`)))) {
       setValid('tile-moved')
     } else if(valid.length) {
       setValid('');

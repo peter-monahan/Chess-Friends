@@ -59,7 +59,9 @@ export const createGameRequest = (opponent_id) => async (dispatch) => {
 
   if (res.ok) {
     const newGameRequest = await res.json();
-    dispatch(addGameRequest(newGameRequest, 'sent'));
+    if(newGameRequest.receiver) {
+      dispatch(addGameRequest(newGameRequest, 'sent'));
+    }
     return res
   }
 };

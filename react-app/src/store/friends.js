@@ -26,7 +26,7 @@ export const addFriend = (friend) => {
 };
 
 
-const deleteFriend = (friendId) => {
+export const deleteFriend = (friendId) => {
   return {
     type: DELETE_FRIEND,
     friendId

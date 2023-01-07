@@ -14,33 +14,21 @@ function Game() {
   const [winner, setWinner] = useState(false);
   const [playerColor, enemyColor] = game?.opponent.id === game?.white_id ? ['black', 'white'] : ['white', 'black'];
   const [upgrade, setUpgrade] = useState(null);
+  const [showSplash, setShowSplash] = useState(true);
+  const [loaded, setLoaded] = useState(false);
 
 
   const sessionUser = useSelector(state => state.session.user);
 
   useEffect(() => {
-      dispatch(getAGame(gameId));
+      dispatch(getAGame(gameId)).then(() => setLoaded(true));
   }, [gameId]);
 
-  useEffect(() => {
-    // if(!game || game.id !== Number(gameId)) {
-    //   setGame(games[gameId]);
-    // }
-    let timeout;
-    const func = async () => {
-      timeout = setTimeout(() => {
-        setGame(games[gameId]);
-      }, 600);
-    }
-    func()
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [games, gameId]);
 
   useEffect(() => {
     setUpgrade(null)
     if(games[gameId]) {
+      if(!showSplash) setShowSplash(true);
       const game = games[gameId];
       if(game) {
         if(game.data.checkmate) {
@@ -55,14 +43,17 @@ function Game() {
           setGameOver(false);
           setWinner(false);
         }
+        let timeout = setTimeout(() => {
+          setGame(games[gameId]);
+        }, 400);
+        return () => {
+          clearTimeout(timeout)
+        }
       }
     }
-
-  }, [games, gameId]);
+  }, [games, gameId, gameOver]);
 
   const gameOverSplash = () => {
-
-
     let string = '';
     if(gameOver === 'checkmate' || gameOver === 'resignation') {
       string = `${winner} wins by ${gameOver}`;
@@ -73,6 +64,7 @@ function Game() {
       <div className='splash-container'>
         <div className='splash-background'>
           <div className='game-over'>
+            <div className='game-over-x-button-div'><button onClick={() => setShowSplash(false)} className='game-over-x-button'>X</button></div>
             <div>{string}</div>
             <button>
             <Link to='/' >Return Home</Link>
@@ -108,10 +100,10 @@ const upgradePieceSplash = () => {
           <img src={game.opponent.profile_image_url || `/images/${enemyColor},pawn.png`} className="user-icon-img"></img>
           <div>{game.opponent.username}<div className={`active-${games[gameId]?.opponent.active}`}></div></div>
         </div>
-        {(gameOver && game !== undefined) && gameOverSplash()}
+        {(gameOver && showSplash) && gameOverSplash()}
         {(upgrade && game !== undefined) && upgradePieceSplash()}
         <div className='board-container'>
-        {(game !== undefined) && <GameBoard setUpgrade={setUpgrade} game={game} playerColor={playerColor} />}
+        {(game !== undefined) && <GameBoard gameOver={gameOver} setUpgrade={setUpgrade} game={game} playerColor={playerColor} />}
         <button disabled={gameOver !== false} onClick={() => dispatch(forfeiteGame(gameId))}>Resign</button>
         </div>
         <div className='game-player-div'>
@@ -120,7 +112,7 @@ const upgradePieceSplash = () => {
         </div>
       </div>
     );
-  } else if(gameOver) {
+  } else if(gameOver || (loaded && !games[gameId])) {
     return <Redirect to='/' />
   } else {
     return null;

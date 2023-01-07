@@ -6,6 +6,9 @@ from datetime import datetime
 from app.sockets import socketio
 from app import py_chess
 import json
+import random
+import time
+
 
 game_routes = Blueprint('games', __name__)
 
@@ -52,50 +55,68 @@ def make_move(id):
     if game_record:
         game_data = json.loads(game_record.json_data)
         if game_data['turn'][0] == 'white' and current_user.id == game_record.white_id:
-
-            game = py_chess.Game(game=game_data)
-            success = game.move(move)
-            if success:
-                if game.checkmate or game.stalemate:
-                    game_record.json_data = json.dumps(game.to_dict())
-
-                    db.session.delete(game_record)
-                    db.session.commit()
-                else:
-                    game_record.json_data = json.dumps(game.to_dict())
-                    db.session.commit()
-
-                if game_record.black_player.session_id:
-                    socketio.emit('update_game', game_record.to_dict_with_opponent(game_record.black_id),
-                                  room=game_record.black_player.session_id)
-                socketio.emit('update_game', game_record.to_dict_with_opponent(current_user.id),
-                                  room=user.session_id)
-                return game_record.to_dict_with_opponent(current_user.id)
+            if game_record.black_id <= 0:
+                other_player = py_chess.bots_profiles[(-game_record.black_id)-1]
             else:
-                return {'errors': ['Not a valid move']}, 400
+                other_player = game_record.black_player
         elif game_data['turn'][0] == 'black' and current_user.id == game_record.black_id:
-            game = py_chess.Game(game=game_data)
-            success = game.move(move)
-            if success:
-                if game.checkmate or game.stalemate:
-                    game_record.json_data = json.dumps(game.to_dict())
-
-                    db.session.delete(game_record)
-                    db.session.commit()
-                else:
-                    game_record.json_data = json.dumps(game.to_dict())
-                    db.session.commit()
-
-                if game_record.white_player.session_id:
-                    socketio.emit('update_game', game_record.to_dict_with_opponent(game_record.white_id),
-                                  room=game_record.white_player.session_id)
-                socketio.emit('update_game', game_record.to_dict_with_opponent(current_user.id),
-                                  room=user.session_id)
-                return game_record.to_dict_with_opponent(current_user.id)
+            if game_record.white_id <= 0:
+                other_player = py_chess.bots_profiles[(-game_record.white_id)-1]
             else:
-                return {'errors': ['Not a valid move']}, 400
+                other_player = game_record.white_player
         else:
             return {'errors': ['Unauthorized']}, 401
+        game = py_chess.Game(game=game_data)
+        success = game.move(move)
+        if success:
+            if game.checkmate or game.stalemate:
+                game_record.json_data = json.dumps(game.to_dict())
+
+                db.session.delete(game_record)
+                db.session.commit()
+            elif other_player.id <= 0:
+                move = py_chess.bots[(-other_player.id)-1](game)
+                success2 = game.move(move)
+                if success2:
+                    game_record.json_data = json.dumps(game.to_dict())
+                    db.session.commit()
+                else:
+                  raise RuntimeError(f'Bot move was unsuccesful. bot id: {other_player.id}')
+            else:
+                game_record.json_data = json.dumps(game.to_dict())
+                db.session.commit()
+
+            if other_player.session_id:
+                socketio.emit('update_game', game_record.to_dict_with_opponent(other_player.id),
+                              room=other_player.session_id)
+            socketio.emit('update_game', game_record.to_dict_with_opponent(current_user.id),
+                              room=user.session_id)
+            return game_record.to_dict_with_opponent(current_user.id)
+        else:
+            return {'errors': ['Not a valid move']}, 400
+        # elif game_data['turn'][0] == 'black' and current_user.id == game_record.black_id:
+        #     game = py_chess.Game(game=game_data)
+        #     success = game.move(move)
+        #     if success:
+        #         if game.checkmate or game.stalemate:
+        #             game_record.json_data = json.dumps(game.to_dict())
+
+        #             db.session.delete(game_record)
+        #             db.session.commit()
+        #         else:
+        #             game_record.json_data = json.dumps(game.to_dict())
+        #             db.session.commit()
+
+        #         if game_record.white_player.session_id:
+        #             socketio.emit('update_game', game_record.to_dict_with_opponent(game_record.white_id),
+        #                           room=game_record.white_player.session_id)
+        #         socketio.emit('update_game', game_record.to_dict_with_opponent(current_user.id),
+        #                           room=user.session_id)
+        #         return game_record.to_dict_with_opponent(current_user.id)
+        #     else:
+        #         return {'errors': ['Not a valid move']}, 400
+        # else:
+        #     return {'errors': ['Unauthorized']}, 401
     else:
         return {'errors': ['Game could not be found']}, 404
 
@@ -108,27 +129,40 @@ def forfeit_game(id):
     if game_record:
       game = py_chess.Game(game=json.loads(game_record.json_data))
       if current_user.id == game_record.white_id:
-        game.forfeit_game('white')
-        db.session.delete(game_record)
-        db.session.commit()
-        if game_record.black_player.session_id:
-            socketio.emit('update_game', {**game_record.to_dict_with_opponent(game_record.black_id), 'data': game.to_dict()},
-                          room=game_record.black_player.session_id)
-        socketio.emit('update_game', {**game_record.to_dict_with_opponent(current_user.id), 'data': game.to_dict()},
-                      room=user.session_id)
-        return {**game_record.to_dict_with_opponent(current_user.id), 'data': game.to_dict()}
+        color = 'white'
+        if game_record.black_id <= 0:
+          other_player = py_chess.bots_profiles[game_record.black_id]
+        else:
+          other_player = game_record.black_player
       elif current_user.id == game_record.black_id:
-        game.forfeit_game('black')
-        db.session.delete(game_record)
-        db.session.commit()
-        if game_record.white_player.session_id:
-            socketio.emit('update_game', {**game_record.to_dict_with_opponent(game_record.white_id), 'data': game.to_dict()},
-                          room=game_record.white_player.session_id)
-        socketio.emit('update_game', {**game_record.to_dict_with_opponent(current_user.id), 'data': game.to_dict()},
-                      room=user.session_id)
-        return {**game_record.to_dict_with_opponent(current_user.id), 'data': game.to_dict()}
+        color = 'black'
+        if game_record.white_id <= 0:
+          other_player = py_chess.bots_profiles[game_record.white_id]
+        else:
+          other_player = game_record.white_player
       else:
         return {'errors': ['Unauthorized']}, 401
+      game.forfeit_game(color)
+      db.session.delete(game_record)
+      db.session.commit()
+      if other_player.session_id:
+          socketio.emit('update_game', {**game_record.to_dict_with_opponent(other_player.id), 'data': game.to_dict()},
+                        room=other_player.session_id)
+      socketio.emit('update_game', {**game_record.to_dict_with_opponent(current_user.id), 'data': game.to_dict()},
+                    room=user.session_id)
+      return {**game_record.to_dict_with_opponent(current_user.id), 'data': game.to_dict()}
+      # elif current_user.id == game_record.black_id:
+      #   game.forfeit_game('black')
+      #   db.session.delete(game_record)
+      #   db.session.commit()
+      #   if game_record.white_player.session_id:
+      #       socketio.emit('update_game', {**game_record.to_dict_with_opponent(game_record.white_id), 'data': game.to_dict()},
+      #                     room=game_record.white_player.session_id)
+      #   socketio.emit('update_game', {**game_record.to_dict_with_opponent(current_user.id), 'data': game.to_dict()},
+      #                 room=user.session_id)
+      #   return {**game_record.to_dict_with_opponent(current_user.id), 'data': game.to_dict()}
+      # else:
+      #   return {'errors': ['Unauthorized']}, 401
     else:
       return {'errors': ['Game could not be found']}, 404
 
@@ -157,7 +191,31 @@ def create_game_request():
     form = GameRequestForm()
     if form.validate_on_submit:
         if current_user.id != form.data['opponent_id']:
+            if form.data['opponent_id'] < 0:
+                user = User.query.get(current_user.id)
+                players = [form.data['opponent_id'], current_user.id]
+                random.shuffle(players)
+                game_data = py_chess.Game()
+                game = Game(white_id=players[0], black_id=players[1],
+                            json_data=json.dumps(game_data.to_dict()))
+                db.session.add(game)
+                db.session.commit()
 
+                socketio.emit('new_game', {'game': game.to_dict_with_opponent(current_user.id), 'requestId': None},
+                              room=user.session_id)
+                time.sleep(1)
+                if form.data['opponent_id'] == players[0]:
+                    move = py_chess.bots[(-form.data['opponent_id'])-1](game_data)
+                    success = game_data.move(move)
+                game.json_data=json.dumps(game_data.to_dict())
+
+                db.session.commit()
+
+                socketio.emit('update_game', game.to_dict_with_opponent(current_user.id),
+                              room=user.session_id)
+                return game.to_dict_with_opponent(current_user.id)
+            elif form.data['opponent_id'] == 0:
+              pass
             game_request = Game_Request(
                 user_id=current_user.id, opponent_id=form.data['opponent_id'])
             db.session.add(game_request)
@@ -170,7 +228,7 @@ def create_game_request():
                                   room=receiver.session_id)
             return game_request.sent_to_dict()
         else:
-          return {'errors': ['Cannot create game request with self']}
+          return {'errors': ['Cannot create game request with self']}, 400
     else:
         return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 

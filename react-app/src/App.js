@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {Route, Switch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import LoginForm from './components/auth/LoginForm';
 import SignUpForm from './components/auth/SignUpForm';
@@ -13,7 +13,7 @@ import { authenticate } from './store/session';
 import { io } from 'socket.io-client';
 import {addChat} from './store/chats';
 import {addMessage, deleteMessage} from './store/messages';
-import {addFriend} from './store/friends';
+import {addFriend, deleteFriend} from './store/friends';
 import {addFriendRequest, deleteFriendRequest} from './store/friendRequests';
 import {addGame} from './store/games';
 import {deleteGameRequest, addGameRequest} from './store/gameRequests';
@@ -22,6 +22,7 @@ import { getAUser } from './store/users';
 let socket;
 
 function App() {
+  const history = useHistory()
   const [loaded, setLoaded] = useState(false);
   const [view, setView] = useState(false);
   const dispatch = useDispatch();
@@ -60,10 +61,18 @@ function App() {
         dispatch(deleteFriendRequest(requestId, 'sent'))
         dispatch(getAUser(friend.id))
       });
+      socket.on('delete_friend', (friend) => {
+        dispatch(deleteFriend(friend.id));
+        dispatch(getAUser(friend.id))
+      });
       socket.on('new_game', ({game, requestId}) => {
         dispatch(addGame(game));
-        dispatch(deleteGameRequest(requestId, 'sent'))
-        dispatch(getAUser(game.black_id))
+        if (requestId) {
+          dispatch(deleteGameRequest(requestId, 'sent'))
+          dispatch(getAUser(game.black_id))
+        } else {
+          history.replace(`/games/${game.id}`);
+        }
 
       });
       socket.on('update_game', (game) => {
@@ -94,9 +103,9 @@ function App() {
           dispatch(getAUser(request.user_id))
         }
       })
-      // socket.onAny((message, ...args) => {
-      //   console.log(message, ...args)
-      // })
+      socket.onAny((message, ...args) => {
+        console.log(message, ...args)
+      })
     } else if(socket) {
       socket.disconnect()
     }
@@ -111,7 +120,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <>
       <NavBar view={view} setView={setView} />
       <Switch>
         <Route path='/login' exact={true}>
@@ -135,7 +144,7 @@ function App() {
         </Route>
 
       </Switch>
-    </BrowserRouter>
+    </>
   );
 }
 

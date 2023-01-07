@@ -12,6 +12,7 @@ function getTransform(startCoords, piece) {
   const [pxcol, pxrow] = [(0 + (newCol*62.5)), (0 - (newRow*62.5))]
   return `${pxcol}px,${pxrow}px`
 }
+
 function getPosition(start) {
   let bottom = 500
   let left = 0
@@ -27,7 +28,7 @@ function getPosition(start) {
 
 
 
-function Piece({start, pieceStr, game, selected, setSelected, playerColor, setUpgrade}) {
+function Piece({start, pieceStr, game, selected, setSelected, playerColor, setUpgrade, gameOver}) {
   const dispatch = useDispatch()
   const liveGame = useSelector(state => state.games[game.id])
   const color = pieceStr.slice(0,5)
@@ -80,8 +81,8 @@ function Piece({start, pieceStr, game, selected, setSelected, playerColor, setUp
   const styleObj = {
     position: 'relative',
     transform: `translate(${getTransform(start, piece)})`,
-    ...getPosition(start),
-    visibility: piece ? 'visible' : 'hidden',
+    ...getPosition(game.data.pieces[color][pieceStr].curr_coords),
+    visibility: (piece || gameOver) ? 'visible' : 'hidden',
   }
 
   return (

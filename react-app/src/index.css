@@ -21,8 +21,10 @@ body {
   border-radius: 50%;
   background-color: greenyellow;
   display: inline-block;
-  margin-bottom: 8px;
+  margin-bottom: 5%;
   /* border: 2px solid rgb(0, 186, 0); */
+  /* position: relative; */
+  /* bottom: 5px; */
 }
 .active-false {
   display: none;
