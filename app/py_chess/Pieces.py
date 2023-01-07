@@ -105,7 +105,7 @@ class LongRangePiece(Piece):
             enemy_king = self.game.kings['white']
 
           if [row, col] == enemy_king.curr_coords:
-            self.game.checks.append(checkArr)
+            self.game.checks.append([*checkArr])
           else:
               checkArr.append([row,col])
 
@@ -132,7 +132,7 @@ class ShortRangePiece(Piece):
 
       if((row <= 7 and row >= 0) and (col <= 7 and col >= 0)):
         if ((self.game.turn[1] == self.color) and ([row, col] == enemy_king.curr_coords)):
-          self.game.checks.append([curr_row,curr_col])
+          self.game.checks.append([[curr_row,curr_col]])
 
         res.append([row, col])
 
@@ -361,7 +361,7 @@ class King(ShortRangePiece):
 
     res = [square for square in res if not (square in self.game.opponent_line_of_sight)]
 
-    if self.times_moved == 0:
+    if self.times_moved == 0 and  not self.game.checks:
       leftRight = [-1, 1]
 
       for direction in leftRight:

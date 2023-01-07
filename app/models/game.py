@@ -1,5 +1,6 @@
 from .db import db
 from datetime import datetime
+from app import py_chess
 import json
 
 class Game(db.Model):
@@ -26,7 +27,37 @@ class Game(db.Model):
     }
 
   def to_dict_with_opponent(self, user_id):
-    if user_id == self.white_id:
+    if self.black_id <= 0:
+      created_at = self.created_at
+      updated_at = self.updated_at
+      if created_at or updated_at:
+        created_at = self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
+        updated_at = self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
+      return {
+        'id': self.id,
+        'white_id': self.white_id,
+        'black_id': self.black_id,
+        'data': json.loads(self.json_data),
+        'created_at': created_at,
+        'updated_at': updated_at,
+        'opponent': py_chess.bots_profiles[self.black_id].to_dict()
+      }
+    elif self.white_id <= 0:
+      created_at = self.created_at
+      updated_at = self.updated_at
+      if created_at or updated_at:
+        created_at = self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
+        updated_at = self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
+      return {
+        'id': self.id,
+        'white_id': self.white_id,
+        'black_id': self.black_id,
+        'data': json.loads(self.json_data),
+        'created_at': created_at,
+        'updated_at': updated_at,
+        'opponent': py_chess.bots_profiles[self.white_id].to_dict()
+      }
+    elif user_id == self.white_id:
       return {
         'id': self.id,
         'white_id': self.white_id,

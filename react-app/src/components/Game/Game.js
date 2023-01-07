@@ -22,21 +22,20 @@ function Game() {
       dispatch(getAGame(gameId));
   }, [gameId]);
 
-  useEffect(() => {
-    // if(!game || game.id !== Number(gameId)) {
-    //   setGame(games[gameId]);
-    // }
-    let timeout;
-    const func = async () => {
-      timeout = setTimeout(() => {
-        setGame(games[gameId]);
-      }, 600);
-    }
-    func()
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [games, gameId]);
+  // useEffect(() => {
+  //   // if(!game || game.id !== Number(gameId)) {
+  //   //   setGame(games[gameId]);
+  //   // }
+  //   if(!gameOver) {
+  //     let timeout = setTimeout(() => {
+  //       setGame(games[gameId]);
+  //     }, 400);
+
+  //     return () => {
+  //       clearTimeout(timeout)
+  //     }
+  //   }
+  // }, [games, gameId, gameOver]);
 
   useEffect(() => {
     setUpgrade(null)
@@ -58,7 +57,19 @@ function Game() {
       }
     }
 
-  }, [games, gameId]);
+    if(!gameOver) {
+      console.log('SETTING GAME STATE')
+      let timeout = setTimeout(() => {
+        setGame(games[gameId]);
+      }, 400);
+
+      return () => {
+        clearTimeout(timeout)
+      }
+    } else {
+      console.log("DIDNT SET GAME STATE")
+    }
+  }, [games, gameId, gameOver]);
 
   const gameOverSplash = () => {
 
@@ -111,7 +122,7 @@ const upgradePieceSplash = () => {
         {(gameOver && game !== undefined) && gameOverSplash()}
         {(upgrade && game !== undefined) && upgradePieceSplash()}
         <div className='board-container'>
-        {(game !== undefined) && <GameBoard setUpgrade={setUpgrade} game={game} playerColor={playerColor} />}
+        {(game !== undefined) && <GameBoard gameOver={gameOver} setUpgrade={setUpgrade} game={game} playerColor={playerColor} />}
         <button disabled={gameOver !== false} onClick={() => dispatch(forfeiteGame(gameId))}>Resign</button>
         </div>
         <div className='game-player-div'>

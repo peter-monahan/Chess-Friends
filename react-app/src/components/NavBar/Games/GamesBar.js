@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from "react-router-dom";
-import {getAllGameRequests, deleteAGameRequest} from '../../../store/gameRequests'
+import {getAllGameRequests, deleteAGameRequest, createGameRequest} from '../../../store/gameRequests'
 import {getAllGames, acceptGameRequest} from '../../../store/games';
 import {getAllFriends} from '../../../store/friends';
 import './GamesBar.css';
@@ -121,14 +121,14 @@ function GamesBar({setDisplay}) {
   const newGameButton = (
     <button id='game-bar' className="new-game-button" onClick={newGameClick}>
       New Game
-      {showOptions && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><button id="game-bar" onClick={() => {setShowFriends(true); dispatch(getAllFriends())}}>With a Friend</button><button id="game-bar" onClick={() => {}}>Random Player</button></div></div>}
+      {showOptions && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><button id="game-bar" onClick={() => {setShowFriends(true); dispatch(getAllFriends())}}>With a Friend</button><button id="game-bar" onClick={() => dispatch(createGameRequest(-0))}>Random Player</button><button id="game-bar" onClick={() => {dispatch(createGameRequest(-0)); setDisplay(false)}}>With a Bot</button></div></div>}
       {showFriends && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options">friends</div></div>}
     </button>
   )
 
   return (
     <div className="game-bar" id="game-bar">
-      {false && newGameButton}
+      {true && newGameButton}
       <div id='game-bar' className="game-requests">
         Game Invites
         <div className="game-sent-received" id="game-bar">

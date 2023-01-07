@@ -107,16 +107,17 @@ transform: translateY(1px);
 }
 
 .game-options {
-  background-color: rgb(158, 156, 153);
+  background-color: rgb(120, 119, 117);
   border-radius: 10px;
   position:relative;
   top:-25px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   margin: 0;
   /* padding: 10px; */
-  height: 40px;
+  min-height: 80px;
   width: 200px;
   /* width: 0px; */
   z-index: 5;

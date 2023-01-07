@@ -28,7 +28,10 @@ class Game:
       if game :
         data = game
       else:
-        data = default
+        data = {**default}
+        data['board'] = [[item for item in row] for row in default['board']]
+        data['history'] = []
+        data['turn'] = ['white', 'black']
 
 
 
@@ -114,18 +117,23 @@ class Game:
 
   def move(self, move):
     if self.checkmate or self.stalemate or self.forfeit:
+      raise RuntimeError(f'Cannot make move if checkmate, stalemate, or forfeit is true...  checkmate:{self.checkmate}, stalemate:{self.stalemate}, forfeit:{self.forfeit}')
       return False
-
     [old_coords, new_coords] = move['move']
     id = self.board[old_coords[0]][old_coords[1]]
     if id[:5] != self.turn[0]:
+      raise RuntimeError(f'Cannot move piece if color is not equal to current turn color...  id:{id}, turn:{self.turn[0]}')
       return False
 
     piece = self.pieces[self.turn[0]][id]
 
     if new_coords in piece.valid_moves:
-      piece.move(new_coords, piece=piece)
-      if move.get('piece'):
+      if (id[:10] == 'white,pawn' and new_coords[0] == 0) or (id[:10] == 'black,pawn' and new_coords[0] == 7):
+        if not move.get('piece'):
+          move['piece'] = 'queen'
+        old_piece_str = self.board[new_coords[0]][new_coords[1]]
+        if old_piece_str:
+          del self.pieces[old_piece_str[:5]][old_piece_str]
         new_id = f'{self.turn[0]},{move.get("piece")},{str(self.next_id)}'
         self.next_id += 1
         data = {
@@ -135,10 +143,12 @@ class Game:
           'times_moved': 0,
           'valid_moves': []
         }
-        self.pieces[self.turn[0]][new_id] = pieces_obj[move.get("piece")[:4]](self, data)
+        self.pieces[self.turn[0]][new_id] = pieces_obj[move["piece"][:4]](self, data)
         del self.pieces[self.turn[0]][id]
         self.board[new_coords[0]][new_coords[1]] = new_id
-
+        self.board[old_coords[0]][old_coords[1]] = None
+      else:
+        piece.move(new_coords, piece=piece)
 
 
       self.history.append([old_coords, new_coords])
@@ -146,6 +156,7 @@ class Game:
       self.update()
       return True
     else:
+      raise RuntimeError(f'Cannot move piece if move is not in piece valid moves...  new_coords:{new_coords}, valid_moves:{piece.valid_moves} piece:{piece.to_dict()}')
       return False
 
   def forfeit_game(self, color):
