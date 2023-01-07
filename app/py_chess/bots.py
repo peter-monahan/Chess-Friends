@@ -31,5 +31,5 @@ class Bot_Profile:
     }
 
 bots_profiles = [
-  Bot_Profile(-0, None, 'rando_man'),
+  Bot_Profile(-1, None, 'rando_man'),
 ]

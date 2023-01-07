@@ -56,7 +56,7 @@ def make_move(id):
         game_data = json.loads(game_record.json_data)
         if game_data['turn'][0] == 'white' and current_user.id == game_record.white_id:
             if game_record.black_id <= 0:
-                other_player = py_chess.bots_profiles[game_record.black_id]
+                other_player = py_chess.bots_profiles[(-game_record.black_id)-1]
             else:
                 other_player = game_record.black_player
         elif game_data['turn'][0] == 'black' and current_user.id == game_record.black_id:
@@ -75,7 +75,7 @@ def make_move(id):
                 db.session.delete(game_record)
                 db.session.commit()
             elif other_player.id <= 0:
-                move = py_chess.bots[-other_player.id](game)
+                move = py_chess.bots[(-other_player.id)-1](game)
                 success2 = game.move(move)
                 if success2:
                     game_record.json_data = json.dumps(game.to_dict())
@@ -205,7 +205,7 @@ def create_game_request():
                               room=user.session_id)
                 time.sleep(1)
                 if form.data['opponent_id'] == players[0]:
-                    move = py_chess.bots[-form.data['opponent_id']](game_data)
+                    move = py_chess.bots[(-form.data['opponent_id'])-1](game_data)
                     success = game_data.move(move)
                 game.json_data=json.dumps(game_data.to_dict())
 

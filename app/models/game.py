@@ -40,7 +40,7 @@ class Game(db.Model):
         'data': json.loads(self.json_data),
         'created_at': created_at,
         'updated_at': updated_at,
-        'opponent': py_chess.bots_profiles[self.black_id].to_dict()
+        'opponent': py_chess.bots_profiles[(-self.black_id)-1].to_dict()
       }
     elif self.white_id <= 0:
       created_at = self.created_at
@@ -55,7 +55,7 @@ class Game(db.Model):
         'data': json.loads(self.json_data),
         'created_at': created_at,
         'updated_at': updated_at,
-        'opponent': py_chess.bots_profiles[self.white_id].to_dict()
+        'opponent': py_chess.bots_profiles[(-self.white_id)-1].to_dict()
       }
     elif user_id == self.white_id:
       return {

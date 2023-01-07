@@ -13,13 +13,16 @@ function GamesBar({setDisplay}) {
   const [requestsType, setRequestsType] = useState('received');
   const gameRequests = useSelector(state => state.gameRequests);
   const games = useSelector(state => state.games);
+  const friends = useSelector(state => state.friends);
   const [showFriends, setShowFriends] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const [showBots, setShowBots] = useState(false);
+  const [bot, setBot] = useState(1);
   const sessionUser = useSelector(state => state.session.user);
 
   function handleClick(e) {
     const targ = e.target;
-    if(!(targ.id === 'game-bar')){
+    if(!(targ.id.startsWith('game-bar'))){
       setDisplay(false);
     }
   }
@@ -88,11 +91,36 @@ function GamesBar({setDisplay}) {
     </>
   )
 
+  const Friends = () => (
+    <div id="game-bar" className="game-friends-list">
+      {Object.keys(friends).map(key => {
+        const friend = friends[key];
+        return (
+          <button disabled={Object.keys(gameRequests.sent).some(key => gameRequests.sent[key].opponent_id === friend.id)} id="game-bar" onClick={(e) => {dispatch(createGameRequest(friend.id)); setShowFriends(false); e.stopPropagation();}} key={key}>
+            {friend.username}
+          </button>
+        )
+      })}
+      </div>
+  )
+  const Bots = () => (
+    <div id="game-bar--bots-area" className="game-bots-slider">
+      Difficulty: {bot}
+      <input id="game-bar--bots-area" type="range" min={1} max={5} value={bot} onChange={e => setBot(e.target.value)} />
+      <button id="game-bar--bots-area" disabled={bot > 1} onClick={ e => {dispatch(createGameRequest(-bot)); setDisplay(false); e.stopPropagation();}}>Play Bot</button>
+      {bot > 1 && 'Coming Soon!'}
+    </div>
+  )
   const optionsClick = (e) => {
     setShowOptions(false);
   }
   const friendsClick = e => {
     setShowFriends(false);
+  }
+  const botsClick = e => {
+    if(!e.target.id.endsWith('bots-area')) {
+      setShowBots(false);
+    }
   }
   useEffect(() => {
     if(showOptions) {
@@ -109,8 +137,15 @@ function GamesBar({setDisplay}) {
         document.removeEventListener('click', friendsClick)
       }
     }
+    if(showBots) {
+      document.addEventListener('click', botsClick);
 
-  }, [showOptions, showFriends])
+      return () => {
+        document.removeEventListener('click', botsClick)
+      }
+    }
+
+  }, [showOptions, showFriends, showBots])
 
   const newGameClick = () => {
     setShowOptions(true);
@@ -121,8 +156,9 @@ function GamesBar({setDisplay}) {
   const newGameButton = (
     <button id='game-bar' className="new-game-button" onClick={newGameClick}>
       New Game
-      {showOptions && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><button id="game-bar" onClick={() => {setShowFriends(true); dispatch(getAllFriends())}}>With a Friend</button><button id="game-bar" onClick={() => dispatch(createGameRequest(-0))}>Random Player</button><button id="game-bar" onClick={() => {dispatch(createGameRequest(-0)); setDisplay(false)}}>With a Bot</button></div></div>}
-      {showFriends && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options">friends</div></div>}
+      {showOptions && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><button id="game-bar" onClick={() => {setShowFriends(true); dispatch(getAllFriends())}}>With a Friend</button><button id="game-bar" onClick={() => dispatch(createGameRequest(0))}>Random Player</button><button id="game-bar" onClick={() => setShowBots(true)}>With a Bot</button></div></div>}
+      {showFriends && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><Friends /></div></div>}
+      {showBots && <div id="game-bar" className="game-options-container"><div id="game-bar" className="game-options"><Bots /></div></div>}
     </button>
   )
 
