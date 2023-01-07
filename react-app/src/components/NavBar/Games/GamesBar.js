@@ -79,7 +79,7 @@ function GamesBar({setDisplay}) {
     <>
       {Object.keys(games).map(key => {
         const game = games[key];
-        const [playerColor, enemyColor] = game?.opponent.id === game?.white_id ? ['black', 'white'] : ['white', 'black'];
+        const [playerColor, enemyColor] =( game?.opponent.id === game?.white_id) || game?.white_id === null ? ['black', 'white'] : ['white', 'black'];
         const yourTurn = game.data.turn[0] === playerColor;
         return (
           <Link className="game-button" to={`/games/${game.id}`} key={key}>

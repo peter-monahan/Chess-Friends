@@ -36,7 +36,7 @@ function Piece({start, pieceStr, game, selected, setSelected, playerColor, setUp
   const [valid, setValid] = useState('');
 
   let owned;
-  if(game.opponent.id === game.black_id) {
+  if(game.opponent.id === game.black_id || game.black_id === null) {
     if(color === 'white') {
       owned = true;
     } else {

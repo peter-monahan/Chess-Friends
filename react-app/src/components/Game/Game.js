@@ -12,7 +12,7 @@ function Game() {
   const [game, setGame] = useState(undefined);
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(false);
-  const [playerColor, enemyColor] = game?.opponent.id === game?.white_id ? ['black', 'white'] : ['white', 'black'];
+  const [playerColor, enemyColor] = (game?.opponent.id === game?.white_id) || game.white_id === null ? ['black', 'white'] : ['white', 'black'];
   const [upgrade, setUpgrade] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
   const [loaded, setLoaded] = useState(false);
