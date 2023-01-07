@@ -8,6 +8,7 @@ class Game(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   white_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   black_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+  bot_id = db.Column(db.Integer)
   json_data = db.Column(db.Text(), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
   updated_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
@@ -27,7 +28,7 @@ class Game(db.Model):
     }
 
   def to_dict_with_opponent(self, user_id):
-    if self.black_id <= 0:
+    if self.black_id == None:
       created_at = self.created_at
       updated_at = self.updated_at
       if created_at or updated_at:
@@ -40,9 +41,9 @@ class Game(db.Model):
         'data': json.loads(self.json_data),
         'created_at': created_at,
         'updated_at': updated_at,
-        'opponent': py_chess.bots_profiles[(-self.black_id)-1].to_dict()
+        'opponent': py_chess.bots_profiles[(-self.bot_id)-1].to_dict()
       }
-    elif self.white_id <= 0:
+    elif self.white_id == None:
       created_at = self.created_at
       updated_at = self.updated_at
       if created_at or updated_at:
@@ -55,7 +56,7 @@ class Game(db.Model):
         'data': json.loads(self.json_data),
         'created_at': created_at,
         'updated_at': updated_at,
-        'opponent': py_chess.bots_profiles[(-self.white_id)-1].to_dict()
+        'opponent': py_chess.bots_profiles[(-self.bot_id)-1].to_dict()
       }
     elif user_id == self.white_id:
       return {

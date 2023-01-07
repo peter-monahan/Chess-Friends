@@ -55,13 +55,13 @@ def make_move(id):
     if game_record:
         game_data = json.loads(game_record.json_data)
         if game_data['turn'][0] == 'white' and current_user.id == game_record.white_id:
-            if game_record.black_id <= 0:
-                other_player = py_chess.bots_profiles[(-game_record.black_id)-1]
+            if game_record.black_id == None:
+                other_player = py_chess.bots_profiles[(-game_record.bot_id)-1]
             else:
                 other_player = game_record.black_player
         elif game_data['turn'][0] == 'black' and current_user.id == game_record.black_id:
-            if game_record.white_id <= 0:
-                other_player = py_chess.bots_profiles[(-game_record.white_id)-1]
+            if game_record.white_id == None:
+                other_player = py_chess.bots_profiles[(-game_record.bot_id)-1]
             else:
                 other_player = game_record.white_player
         else:
@@ -130,14 +130,14 @@ def forfeit_game(id):
       game = py_chess.Game(game=json.loads(game_record.json_data))
       if current_user.id == game_record.white_id:
         color = 'white'
-        if game_record.black_id <= 0:
-          other_player = py_chess.bots_profiles[game_record.black_id]
+        if game_record.black_id == None:
+          other_player = py_chess.bots_profiles[(-game_record.bot_id)-1]
         else:
           other_player = game_record.black_player
       elif current_user.id == game_record.black_id:
         color = 'black'
-        if game_record.white_id <= 0:
-          other_player = py_chess.bots_profiles[game_record.white_id]
+        if game_record.white_id == None:
+          other_player = py_chess.bots_profiles[(-game_record.bot_id)-1]
         else:
           other_player = game_record.white_player
       else:
@@ -193,10 +193,10 @@ def create_game_request():
         if current_user.id != form.data['opponent_id']:
             if form.data['opponent_id'] < 0:
                 user = User.query.get(current_user.id)
-                players = [form.data['opponent_id'], current_user.id]
+                players = [None, current_user.id]
                 random.shuffle(players)
                 game_data = py_chess.Game()
-                game = Game(white_id=players[0], black_id=players[1],
+                game = Game(white_id=players[0], black_id=players[1], bot_id=form.data['opponent_id'],
                             json_data=json.dumps(game_data.to_dict()))
                 db.session.add(game)
                 db.session.commit()
@@ -204,7 +204,7 @@ def create_game_request():
                 socketio.emit('new_game', {'game': game.to_dict_with_opponent(current_user.id), 'requestId': None},
                               room=user.session_id)
                 time.sleep(1)
-                if form.data['opponent_id'] == players[0]:
+                if players[0] == None:
                     move = py_chess.bots[(-form.data['opponent_id'])-1](game_data)
                     success = game_data.move(move)
                 game.json_data=json.dumps(game_data.to_dict())
