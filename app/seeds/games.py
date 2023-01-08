@@ -49,4 +49,4 @@ def undo_games():
     db.session.commit()
 
 def delete_all_games():
-    User.query.all().delete()
+    User.query.delete()
