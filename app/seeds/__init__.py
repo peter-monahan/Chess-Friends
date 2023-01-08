@@ -4,7 +4,7 @@ from .friend_requests import seed_friend_requests, undo_friend_requests
 from .friends import seed_friends, undo_friends
 from .dm_views import seed_dms, undo_dms
 from .messages import seed_messages, undo_messages
-from .games import seed_games, undo_games
+from .games import seed_games, undo_games, delete_all_games
 from .game_requests import seed_game_requests, undo_game_requests
 from .game_histories import seed_game_histories, undo_game_histories
 # Creates a seed group to hold our commands
@@ -96,6 +96,10 @@ def seed_just_games():
 @seed_commands.command('undo games')
 def undo_just_games():
   undo_games()
+
+@seed_commands.command('delete games')
+def delete_just_games():
+  delete_all_games()
 
 
 
