@@ -21,8 +21,8 @@ class User(db.Model, UserMixin):
   profile_image_url = db.Column(db.String(300))
   bio = db.Column(db.String(300))
   session_id = db.Column(db.Text())
-  created_at = db.Column(db.DateTime, default=datetime.now)
-  updated_at = db.Column(db.DateTime, default=datetime.now)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
   friends = db.relationship(
     "User",
@@ -64,8 +64,8 @@ class User(db.Model, UserMixin):
       'profile_image_url': self.profile_image_url,
       'bio': self.bio,
       'active': bool(self.session_id),
-      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
-      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
     }
 
   def to_dict_with_friend(self, session_id):
@@ -101,8 +101,8 @@ class User(db.Model, UserMixin):
       'bio': self.bio,
       'active': bool(self.session_id),
       'is_friend': is_friend,
-      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
-      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
       'sent_to_friend_req': sent_fr_req,
       'received_from_friend_req': received_fr_req,
       'sent_to_game_req': sent_gm_req,
@@ -116,7 +116,7 @@ class User(db.Model, UserMixin):
       'username': self.username,
       'profile_image_url': self.profile_image_url,
       'active': bool(self.session_id),
-      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
     }
 
   def to_dict_private(self):
@@ -127,6 +127,6 @@ class User(db.Model, UserMixin):
       'profile_image_url': self.profile_image_url,
       'bio': self.bio,
       'active': bool(self.session_id),
-      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
-      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
     }
