@@ -10,8 +10,8 @@ class Game(db.Model):
   black_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   bot_id = db.Column(db.Integer)
   json_data = db.Column(db.Text(), nullable=False)
-  created_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
-  updated_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+  updated_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
   white_player = db.relationship('User', foreign_keys=[white_id], back_populates='games', lazy='joined')
   black_player = db.relationship('User', foreign_keys=[black_id], back_populates='games', lazy='joined')
@@ -23,8 +23,8 @@ class Game(db.Model):
       'white_id': self.white_id,
       'black_id': self.black_id,
       'data': json.loads(self.json_data),
-      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
-      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT")
     }
 
   def to_dict_with_opponent(self, user_id):
@@ -32,8 +32,8 @@ class Game(db.Model):
       created_at = self.created_at
       updated_at = self.updated_at
       if created_at or updated_at:
-        created_at = self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
-        updated_at = self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
+        created_at = self.created_at.strftime("%a, %d %b %Y %H:%M:%S GMT")
+        updated_at = self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT")
       return {
         'id': self.id,
         'white_id': self.white_id,
@@ -47,8 +47,8 @@ class Game(db.Model):
       created_at = self.created_at
       updated_at = self.updated_at
       if created_at or updated_at:
-        created_at = self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
-        updated_at = self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z")
+        created_at = self.created_at.strftime("%a, %d %b %Y %H:%M:%S GMT")
+        updated_at = self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT")
       return {
         'id': self.id,
         'white_id': self.white_id,
@@ -64,8 +64,8 @@ class Game(db.Model):
         'white_id': self.white_id,
         'black_id': self.black_id,
         'data': json.loads(self.json_data),
-        'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
-        'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+        'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+        'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
         'opponent': self.black_player.to_dict()
       }
     else:
@@ -74,7 +74,7 @@ class Game(db.Model):
         'white_id': self.white_id,
         'black_id': self.black_id,
         'data': json.loads(self.json_data),
-        'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
-        'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+        'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+        'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
         'opponent': self.white_player.to_dict()
       }

@@ -8,8 +8,8 @@ class Dm_View(db.Model):  # type: ignore
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
   other_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-  created_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
-  updated_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+  updated_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
   __table_args__ = (db.UniqueConstraint('user_id', 'other_user_id', name='_user_other_uc'),)
 
@@ -35,8 +35,8 @@ class Dm_View(db.Model):  # type: ignore
       'id': self.id,
       'user_id': self.user_id,
       'other_user_id': self.other_user_id,
-      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
-      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S %Z"),
+      'created_at': self.created_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+      'updated_at': self.updated_at.strftime("%a, %d %b %Y %H:%M:%S GMT"),
       'user': self.user.to_dict(),
       'message': message
     }
