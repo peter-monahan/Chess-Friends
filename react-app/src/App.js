@@ -120,7 +120,8 @@ function App() {
   }
 
   return (
-    <>
+    <div className='main-container'>
+
       <NavBar view={view} setView={setView} />
       <Switch>
         <Route path='/login' exact={true}>
@@ -144,7 +145,7 @@ function App() {
         </Route>
 
       </Switch>
-    </>
+    </div>
   );
 }
 

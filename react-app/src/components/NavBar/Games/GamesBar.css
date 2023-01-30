@@ -110,7 +110,7 @@ transform: translateY(1px);
   background-color: rgb(126, 117, 107);
   border-radius: 10px;
   position:relative;
-  top:-25px;
+  top:-47px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,8 +125,10 @@ transform: translateY(1px);
 }
 
 .new-game-button {
-  min-width: 100px;
+  width: 200px;
+  height: 40px;
   padding: 0;
+  font-size: large;
 }
 
 .game-friends-list {
@@ -143,4 +145,5 @@ transform: translateY(1px);
   align-items: center;
   row-gap: 4px;
   width: 100%;
+  font-size: medium;
 }
