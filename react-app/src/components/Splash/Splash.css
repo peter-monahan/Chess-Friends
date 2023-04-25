@@ -43,3 +43,8 @@ justify-content: flex-start;
   align-items: center;
   row-gap: 10px;
 }
+
+.demo-game-button {
+  position: relative;
+  bottom: 60px;
+}

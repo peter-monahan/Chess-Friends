@@ -62,7 +62,7 @@ export const createGameRequest = (opponent_id) => async (dispatch) => {
     if(newGameRequest.receiver) {
       dispatch(addGameRequest(newGameRequest, 'sent'));
     }
-    return res
+    return newGameRequest
   }
 };
 

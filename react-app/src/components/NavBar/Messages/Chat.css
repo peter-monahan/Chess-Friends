@@ -62,6 +62,7 @@
   border-radius: 50%;
   cursor: pointer;
   padding-bottom: 0.5px;
+  text-shadow: none !important;
 }
 
 .message-settings-button:hover {
