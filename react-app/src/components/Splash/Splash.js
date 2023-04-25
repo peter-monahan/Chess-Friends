@@ -2,19 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {FaGithub, FaLinkedin} from 'react-icons/fa';
 import './Splash.css'
+import { createGameRequest } from '../../store/gameRequests';
+import { login } from '../../store/session';
+import { useHistory } from 'react-router-dom';
+
+
+
+
 function Splash() {
   const dispatch = useDispatch()
+  const history = useHistory()
 
 
   const sessionUser = useSelector(state => state.session.user);
 
 
+  async function demoGame(e) {
+    if(!sessionUser) {
+      await dispatch(login('demo1@aa.io', 'password'));
+    }
+    let game = await dispatch(createGameRequest(-1));
+    history.replace(`/games/${game.id}`);
+
+  }
 
 
   return (
     <div className='home-page-container'>
       <h1>Welcome to JustChess!</h1>
-      <p>The place you go...</p>
+      <p>The place you go when you just want to play chess.</p>
       <div className="home-outer-game-board">
         <div className="home-game-board">
           <div className="tile white-tile "></div>
@@ -115,7 +131,8 @@ function Splash() {
           <div className="piece" style={{position: 'relative', bottom:' 62.5px', left: '375px', visibility: 'visible'}}><img className="piece-img player-white" src="/images/white,knight.png" alt='white knight'></img></div>
           <div className="piece" style={{position: 'relative', bottom:' 62.5px', left: '437.5px', visibility: 'visible'}}><img className="piece-img player-white" src="/images/white,rook.png" alt='white rook'></img></div>
         </div>
-      <p>when you just want to play chess.</p>
+        <button className='new-game-button demo-game-button' onClick={demoGame}>Start Demo Game</button>
+      {/* <p>when you just want to play chess.</p> */}
       <div className='about-area'>
         About
         <div className='about-links'>
